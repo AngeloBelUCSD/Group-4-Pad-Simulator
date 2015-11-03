@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -39,10 +41,18 @@ public class MainActivity extends AppCompatActivity {
         Point p = new Point();
         d.getSize(p);
 
-        ImageView imageView = (ImageView) findViewById(R.id.image1);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redorb);
-        Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, p.x/6, p.x/6, true);
-        imageView.setImageBitmap(newBitmap);
+        int totalOrbs = 36;
+
+
+        ArrayList<ImageView> orbList = new ArrayList<ImageView>();
+        createOrbs(orbList);
+        for(int i = 0; i<totalOrbs;i++) {
+            ImageView orb = orbList.get(i);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redorb);
+            //Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, (p.x)/6, (p.y)/10, true);
+            Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, p.x / 7, p.x / 7, true);
+            orb.setImageBitmap(newBitmap);
+        }
     }
 
     @Override
@@ -65,5 +75,46 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void createOrbs(ArrayList<ImageView> list)
+    {
+        list.add(0,(ImageView) findViewById(R.id.imageView));
+        list.add(1,(ImageView) findViewById(R.id.imageView2));
+        list.add(2,(ImageView) findViewById(R.id.imageView3));
+        list.add(3,(ImageView) findViewById(R.id.imageView4));
+        list.add(4,(ImageView) findViewById(R.id.imageView5));
+        list.add(5,(ImageView) findViewById(R.id.imageView6));
+        list.add(6,(ImageView) findViewById(R.id.imageView7));
+        list.add(7,(ImageView) findViewById(R.id.imageView8));
+        list.add(8,(ImageView) findViewById(R.id.imageView9));
+        list.add(9,(ImageView) findViewById(R.id.imageView10));
+        list.add(10,(ImageView) findViewById(R.id.imageView11));
+        list.add(11,(ImageView) findViewById(R.id.imageView12));
+        list.add(12,(ImageView) findViewById(R.id.imageView13));
+        list.add(13,(ImageView) findViewById(R.id.imageView14));
+        list.add(14,(ImageView) findViewById(R.id.imageView15));
+        list.add(15,(ImageView) findViewById(R.id.imageView16));
+        list.add(16,(ImageView) findViewById(R.id.imageView17));
+        list.add(17,(ImageView) findViewById(R.id.imageView18));
+        list.add(18,(ImageView) findViewById(R.id.imageView19));
+        list.add(19,(ImageView) findViewById(R.id.imageView20));
+        list.add(20,(ImageView) findViewById(R.id.imageView21));
+        list.add(21,(ImageView) findViewById(R.id.imageView22));
+        list.add(22,(ImageView) findViewById(R.id.imageView23));
+        list.add(23,(ImageView) findViewById(R.id.imageView24));
+        list.add(24,(ImageView) findViewById(R.id.imageView25));
+        list.add(25,(ImageView) findViewById(R.id.imageView26));
+        list.add(26,(ImageView) findViewById(R.id.imageView27));
+        list.add(27,(ImageView) findViewById(R.id.imageView28));
+        list.add(28,(ImageView) findViewById(R.id.imageView29));
+        list.add(29,(ImageView) findViewById(R.id.imageView30));
+        list.add(30,(ImageView) findViewById(R.id.imageView31));
+        list.add(31,(ImageView) findViewById(R.id.imageView32));
+        list.add(32,(ImageView) findViewById(R.id.imageView33));
+        list.add(33,(ImageView) findViewById(R.id.imageView34));
+        list.add(34,(ImageView) findViewById(R.id.imageView35));
+        list.add(35,(ImageView) findViewById(R.id.imageView36));
+
     }
 }
