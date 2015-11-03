@@ -35,21 +35,14 @@
         android:layout_gravity="center_horizontal"
         />
 
-    <LinearLayout
-        android:columnCount="1"
-        >
-
         <ImageView
             android:id="@+id/image1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="center"
-            android:src="@drawable/redorb"
-
-            android:layout_columnSpan="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
 
             />
 
-    </LinearLayout>
 
 </GridLayout>
