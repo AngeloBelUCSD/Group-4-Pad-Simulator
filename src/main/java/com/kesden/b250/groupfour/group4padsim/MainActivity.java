@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,12 +44,22 @@ public class MainActivity extends AppCompatActivity {
 
         int totalOrbs = 36;
 
+        ArrayList<Integer> colorList = new ArrayList<Integer>();
+        colorList.add(0,R.drawable.redorb);
+        colorList.add(1,R.drawable.dark);
+        colorList.add(2,R.drawable.heart);
+        colorList.add(3,R.drawable.light);
+        colorList.add(4,R.drawable.water);
+        colorList.add(5,R.drawable.wood);
 
         ArrayList<ImageView> orbList = new ArrayList<ImageView>();
+
+        Random rand = new Random();
+
         createOrbs(orbList);
         for(int i = 0; i<totalOrbs;i++) {
             ImageView orb = orbList.get(i);
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redorb);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), colorList.get(rand.nextInt(6)));
             //Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, (p.x)/6, (p.y)/10, true);
             Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, p.x / 7, p.x / 7, true);
             orb.setImageBitmap(newBitmap);
