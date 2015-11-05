@@ -1,70 +1,62 @@
 package com.kesden.b250.groupfour.group4padsim;
 
+import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener, OnDragListener {
+public class MainActivity extends AppCompatActivity implements OnDragListener, OnTouchListener {
 
-    private ImageView orb1;
+    private ImageView draggedOrb, enteredOrb;
+    private BoardFactory bFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /* Creates activity window */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* Gets window size */
         Display d = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         Point p = new Point();
         d.getSize(p);
 
-        orb1 = null;
+        /* instantiate instance variables */
+        draggedOrb = null;
+        enteredOrb = null;
+        bFactory = new BoardFactory(this, p);
 
-        //int totalOrbs = 36;
-        int totalOrbs = 30;
-
-        ArrayList<Integer> colorList = new ArrayList<Integer>();
-        colorList.add(0,R.drawable.redorb);
-        colorList.add(1,R.drawable.dark);
-        colorList.add(2,R.drawable.heart);
-        colorList.add(3,R.drawable.light);
-        colorList.add(4,R.drawable.water);
-        colorList.add(5,R.drawable.wood);
-
-        ArrayList<ImageView> orbList = new ArrayList<ImageView>();
-
-        Random rand = new Random();
-
+        /* Populate list of ImageViews */
+        ArrayList<ImageView> orbList = new ArrayList<>(30);
         createOrbs(orbList);
-        for(int i = 0; i<totalOrbs;i++) {
-            ImageView orb = orbList.get(i);
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), colorList.get(rand.nextInt(6)));
-            //Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, (p.x)/6, (p.y)/10, true);
-            Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, p.x / 7, p.x / 7, true);
-            orb.setImageBitmap(newBitmap);
-            orb.setOnClickListener(this);
-        }
+
+        /* Populate board and set listeners */
+        bFactory.populateBoard(orbList);
+
+        /* Add listener to main layout */
+        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+        mainLayout.setOnDragListener(this);
     }
 
     @Override
@@ -91,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     public void createOrbs(ArrayList<ImageView> list)
     {
-        list.add(0,(ImageView) findViewById(R.id.imageView));
+        list.add(0,(ImageView) findViewById(R.id.imageView1));
         list.add(1,(ImageView) findViewById(R.id.imageView2));
         list.add(2,(ImageView) findViewById(R.id.imageView3));
         list.add(3,(ImageView) findViewById(R.id.imageView4));
@@ -121,37 +113,73 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         list.add(27,(ImageView) findViewById(R.id.imageView28));
         list.add(28,(ImageView) findViewById(R.id.imageView29));
         list.add(29,(ImageView) findViewById(R.id.imageView30));
-        /*list.add(30,(ImageView) findViewById(R.id.imageView31));
-        list.add(31,(ImageView) findViewById(R.id.imageView32));
-        list.add(32,(ImageView) findViewById(R.id.imageView33));
-        list.add(33,(ImageView) findViewById(R.id.imageView34));
-        list.add(34,(ImageView) findViewById(R.id.imageView35));
-        list.add(35,(ImageView) findViewById(R.id.imageView36));*/
-
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if (orb1 == null) {
-            orb1 = (ImageView) v;
-            orb1.setImageAlpha(127);
-        } else {
-            if (v != orb1) {
-                ImageView orb2 = (ImageView) v;
-                Bitmap swap;
-                swap = ((BitmapDrawable)orb1.getDrawable()).getBitmap();
-                orb1.setImageBitmap(((BitmapDrawable)orb2.getDrawable()).getBitmap());
-                orb2.setImageBitmap(swap);
-            }
-            orb1.setImageAlpha(255);
-            orb1 = null;
-        }
-
     }
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
+        int action = event.getAction();
+        switch (action) {
+            case DragEvent.ACTION_DRAG_STARTED:
+                // do nothing
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                // Handle Enter
+                if (v instanceof ImageView) {
+
+                    if (enteredOrb != null) {
+                        draggedOrb = enteredOrb;
+                    }
+
+                    enteredOrb = (ImageView) v;
+                    swapOrbImages(draggedOrb, enteredOrb);
+                    enteredOrb.setVisibility(View.INVISIBLE);
+                    draggedOrb.setVisibility(View.VISIBLE);
+                }
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                // Handle Exit
+                break;
+            case DragEvent.ACTION_DROP:
+                if (enteredOrb != null)
+                    enteredOrb.setVisibility(View.VISIBLE);
+
+                enteredOrb = null;
+                draggedOrb = null;
+
+                break;
+            case DragEvent.ACTION_DRAG_ENDED:
+                // Handle End
+            default:
+                break;
+        }
+        return true;
+    }
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // PRESSED
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                v.startDrag(data, shadowBuilder, v, 0);
+                draggedOrb = (ImageView)v;
+                draggedOrb.setVisibility(View.INVISIBLE);
+                return true; // if you want to handle the touch event
+            case MotionEvent.ACTION_UP:
+                // RELEASED
+                return true; // if you want to handle the touch event
+        }
         return false;
+    }
+
+    public void swapOrbImages(ImageView view1, ImageView view2) {
+        if (view1 != null && view2 != null) {
+            Bitmap swap;
+            swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
+            view1.setImageBitmap(((BitmapDrawable) view2.getDrawable()).getBitmap());
+            view2.setImageBitmap(swap);
+        }
     }
 }
