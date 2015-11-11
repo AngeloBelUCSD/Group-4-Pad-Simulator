@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             case DragEvent.ACTION_DROP:
                 if (enteredOrb != null)
                     enteredOrb.setVisibility(View.VISIBLE);
+                if (draggedOrb != null)
+                    draggedOrb.setVisibility(View.VISIBLE);
 
                 enteredOrb = null;
                 draggedOrb = null;
