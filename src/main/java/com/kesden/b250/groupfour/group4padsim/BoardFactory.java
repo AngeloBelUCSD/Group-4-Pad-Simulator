@@ -13,6 +13,7 @@ public class BoardFactory {
     private Random rand;
     public ArrayList<Integer> colorList;
     public ArrayList<OrbView> orbList;
+
     MainActivity activity;
     Point point;
 
@@ -37,6 +38,7 @@ public class BoardFactory {
 
     public void createOrbs(ArrayList<OrbView> list)
     {
+
         list.add(0,(OrbView) activity.findViewById(R.id.imageView1));
         list.add(1,(OrbView) activity.findViewById(R.id.imageView2));
         list.add(2,(OrbView) activity.findViewById(R.id.imageView3));
@@ -100,6 +102,7 @@ public class BoardFactory {
             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 7, point.x / 7, true);
             orb.setImageBitmap(newBitmap);
             orb.setID(drawableID);
+
             orb.setOnTouchListener(activity);
             orb.setOnDragListener(activity);
         }
