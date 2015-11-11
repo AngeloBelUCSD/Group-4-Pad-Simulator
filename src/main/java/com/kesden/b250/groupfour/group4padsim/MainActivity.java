@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -26,7 +27,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnDragListener, OnTouchListener {
 
-    private ImageView draggedOrb, enteredOrb;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private OrbView draggedOrb, enteredOrb;
     private BoardFactory bFactory;
 
     @Override
@@ -53,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         /* Add listener to main layout */
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
         mainLayout.setOnDragListener(this);
+
+        /* Add padding to Grid Layout */
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.grid);
+
     }
 
     @Override
@@ -92,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                         draggedOrb = enteredOrb;
                     }
 
-                    enteredOrb = (ImageView) v;
+                    enteredOrb = (OrbView) v;
                     swapOrbImages(draggedOrb, enteredOrb);
-                    enteredOrb.setVisibility(View.INVISIBLE);
                     draggedOrb.setVisibility(View.VISIBLE);
+                    enteredOrb.setVisibility(View.INVISIBLE);
                 }
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
@@ -128,8 +135,9 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
-                draggedOrb = (ImageView)v;
+                draggedOrb = (OrbView) v;
                 draggedOrb.setVisibility(View.INVISIBLE);
+                Log.d(TAG, "Orb ID is " + draggedOrb.getID());
                 return true; // if you want to handle the touch event
             case MotionEvent.ACTION_UP:
                 // RELEASED
