@@ -11,10 +11,10 @@ public class OrbMatcher {
     private BoardFactory factory;
 
 
-    public Orbmatcher(BoardFactory bfactory){
+    public OrbMatcher(BoardFactory bfactory){
         this.factory = bfactory;
     }
 
 
-    public void threeSort()
+    public void threeSort(){}
 }

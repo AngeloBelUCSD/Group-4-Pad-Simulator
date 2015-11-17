@@ -21,8 +21,10 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
+import android.widget.TextView;
+import java.util.Random;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnDragListener, OnTouchListener {
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
     private OrbView draggedOrb, enteredOrb;
     private BoardFactory bFactory;
+    private Random rand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,22 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid);
 
     }
+
+    public void changeText(){
+        // Gives motivational text on top layout.
+        /* We could pass something here to signify motivational text or other kinds of text to change
+          and add more TextViews. i.e. pass something to signify score and change user score on top. */
+        rand = new Random();
+
+        String[] motiArray = {"You can do it!", "Believe in yourself!", "Brain power",
+                "Caffeine overload","Don't give up", "Mega combo time!", "Good Luck!"};
+
+        TextView motiText = (TextView)findViewById(R.id.textView2);
+        motiText.setText(motiArray[rand.nextInt(7)]);
+
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -132,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // PRESSED
+                changeText(); // changes text on top layout.
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);

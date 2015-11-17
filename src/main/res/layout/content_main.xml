@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:id="@+id/main_layout"
-    >
+    android:id="@+id/main_layout">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/grid"
         android:background="@color/red"
+        android:id="@+id/linear_layout"
         >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ScoresText"
+            android:id="@+id/textView1"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Scores and other content goes here"
+            android:text="Motivational Text"
             android:id="@+id/textView2"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
             />
 
     </LinearLayout>
@@ -39,6 +51,9 @@
         android:layout_alignParentBottom="true"
 
         android:id="@+id/grid"
+        android:background="@drawable/gridbg"
+
+
         >
 
         <com.kesden.b250.groupfour.group4padsim.OrbView
