@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private OrbView draggedOrb, enteredOrb;
     private BoardFactory bFactory;
     private Random rand;
+    private OrbMatcher matcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         draggedOrb = null;
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
+        matcher = new OrbMatcher(bFactory);
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
                 // Handle Exit
+                matcher.threeSort();
                 break;
             case DragEvent.ACTION_DROP:
                 if (enteredOrb != null)
@@ -178,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
             view1.setImageBitmap(((BitmapDrawable) view2.getDrawable()).getBitmap());
             view2.setImageBitmap(swap);
+
         }
     }
 }
