@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -62,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
         /* Add padding to Grid Layout */
         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid);
+
+        /* Hide the Title and Status Bar */
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
     }
 
