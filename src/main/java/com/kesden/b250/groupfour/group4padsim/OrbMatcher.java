@@ -15,6 +15,5 @@ public class OrbMatcher {
         this.factory = bfactory;
     }
 
-
-    public void threeSort()
+    public void threeSort(){}
 }
