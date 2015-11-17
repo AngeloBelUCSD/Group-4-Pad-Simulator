@@ -10,10 +10,10 @@ import java.util.ArrayList;
 public class OrbMatcher {
     private BoardFactory factory;
 
-
-    public Orbmatcher(BoardFactory bfactory){
+    public void Orbmatcher(BoardFactory bfactory){
         this.factory = bfactory;
     }
 
     public void threeSort(){}
+
 }
