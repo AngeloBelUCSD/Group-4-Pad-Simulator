@@ -77,43 +77,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
     }
 
-    public void changeText(int changeNum){
-        // Gives motivational text on top layout.
-        /* We could pass something here to signify motivational text or other kinds of text to change
-          and add more TextViews. i.e. pass something to signify score and change user score on top. */
-        rand = new Random();
-
-        String[] motiArray = {"You can do it!", "Believe in yourself!", "Brain power",
-                "Caffeine overload","Don't give up", "Mega combo time!", "Good Luck!"};
-
-        switch(changeNum){
-            case 1:
-                // Motivational Text when dragging an orb.
-                TextView motiText = (TextView)findViewById(R.id.textView2);
-                motiText.setText(motiArray[rand.nextInt(7)]);
-                break;
-
-            case 2:
-                // Score change when match occurs
-                // TODO UPDATE when orbMatch works
-                TextView scoreText = (TextView)findViewById(R.id.textView1);
-                // update score variable. Will use placeholder for now.
-                lScore += 100;
-                scoreText.setText(Integer.toString(lScore));
-                break;
-
-            case 3:
-                // TODO
-                // Combo Text Awards in here
-                break;
-
-            default:
-                break;
-
-        }
-
-
-    }
 
 
 
@@ -139,6 +102,44 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         return super.onOptionsItemSelected(item);
     }
 
+    public void changeText(int changeNum){
+        // Gives motivational text on top layout.
+        /* We could pass something here to signify motivational text or other kinds of text to change
+          and add more TextViews. i.e. pass something to signify score and change user score on top. */
+        rand = new Random();
+
+        String[] motiArray = {"You can do it!", "Believe in yourself!", "Brain power",
+                "Caffeine overload","Don't give up", "Mega combo time!", "Good Luck!"};
+
+
+        switch(changeNum){
+            case 1:
+                // Score change when match occurs
+                TextView motiText = (TextView)findViewById(R.id.textView2);
+                TextView scoreText = (TextView)findViewById(R.id.textView1);
+                // update score variable. Will use placeholder for now.
+                int turnScore = matcher.total;
+                lScore+=turnScore;
+
+                scoreText.setText(Integer.toString(lScore));
+                motiText = (TextView)findViewById(R.id.textView2);
+                matcher.total=0;
+                if(turnScore==0)
+                {
+                    motiText.setText(motiArray[rand.nextInt(7)]);
+                }
+                else {
+                    motiText.setText(turnScore / 100 + " COMBO!");
+                }
+                break;
+
+            default:
+                break;
+
+        }
+
+
+    }
     @Override
     public boolean onDrag(View v, DragEvent event) {
         int action = event.getAction();
@@ -177,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                // Handle End
                 matcher.threeSort();
+                // Handle End
             default:
                 break;
         }

@@ -17,6 +17,7 @@ import static java.util.Arrays.*;
 
 
 public class OrbMatcher {
+    public int total;
     public int[] threeList;
     private BoardFactory factory;
     private Random rand;
@@ -61,75 +62,68 @@ public class OrbMatcher {
         ArrayList<OrbView> orbs = factory.orbList;
         for(int i = 2; i<orbs.size();i++) {
             OrbView orb = orbs.get(i);
-            if(i>=2)
-            {
-                if(!(i%6==0) || !(i%6==1))
-                {
-                    if(orbs.get(i-2).getID()==(orbs.get(i-1).getID())
-                            &&orbs.get(i-1).getID()==orb.getID())
-                    {
+            if (i >= 2) {
+                if (!(i % 6 == 0) || !(i % 6 == 1)) {
+                    if (orbs.get(i - 2).getID() == (orbs.get(i - 1).getID())
+                            && orbs.get(i - 1).getID() == orb.getID()) {
                         Log.d(TAG, "horizontal check");
                         //tag horizontal 3s
                         int check = i;
                         int add = 0;
                         int type = orb.getID();
-                        while(check%6!=5 && orbs.get(check).getID()==orbs.get(check+1).getID())
-                        {
+                        while (check % 6 != 5 && orbs.get(check).getID() == orbs.get(check + 1).getID()) {
                             check++;
                             add++;
                         }
 
-                        for(int x = i-2;x<i+add+1;x++)
-                        {
-                            threeList[x]=type;
+                        for (int x = i - 2; x < i + add + 1; x++) {
+                            threeList[x] = type;
                             int curr = x;
-                            while(curr-6>=0){
-                                OrbView topOrb = orbs.get(curr-6);
+                            while (curr - 6 >= 0) {
+                                OrbView topOrb = orbs.get(curr - 6);
                                 OrbView currOrb = orbs.get(curr);
                                 Bitmap swap = ((BitmapDrawable) topOrb.getDrawable()).getBitmap();
                                 currOrb.setOrb(swap, topOrb.getID());
-                                curr = curr-6;
+                                curr = curr - 6;
                             }
                             int orbID = rand.nextInt(6);
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
                             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
                             orbs.get(curr).setOrb(newBitmap, orbID);
                         }
+                        total = 300+100*add;
                     }
                 }
-                if(i>11)
-                {
-                    if(orbs.get(i-12).getID()==(orbs.get(i-6).getID())
-                            &&orbs.get(i-6).getID()==orb.getID())
-                    {
+                if (i > 11) {
+                    if (orbs.get(i - 12).getID() == (orbs.get(i - 6).getID())
+                            && orbs.get(i - 6).getID() == orb.getID()) {
                         Log.d(TAG, "vertical check");
                         //tag vertical 3s
                         int curr = i;
                         int add = 0;
                         int type = orb.getID();
-                        while(curr+6<30 && orbs.get(curr).getID()==orbs.get(curr+6).getID())
-                        {
-                            curr+=6;
-                            add+=6;
+                        while (curr + 6 < 30 && orbs.get(curr).getID() == orbs.get(curr + 6).getID()) {
+                            curr += 6;
+                            add += 6;
                         }
-                        for(int x = i-12; x<curr+1;x+=6)
-                        {
-                            threeList[x]=type;
+                        for (int x = i - 12; x < curr + 1; x += 6) {
+                            threeList[x] = type;
                         }
-                        while(curr-18-add>=0){
-                            OrbView topOrb = orbs.get(curr-18-add);
+                        while (curr - 18 - add >= 0) {
+                            OrbView topOrb = orbs.get(curr - 18 - add);
                             OrbView currOrb = orbs.get(curr);
                             Bitmap swap = ((BitmapDrawable) topOrb.getDrawable()).getBitmap();
-                            currOrb.setOrb(swap,topOrb.getID());
-                            curr = curr-6;
+                            currOrb.setOrb(swap, topOrb.getID());
+                            curr = curr - 6;
                         }
-                        while(curr>=0){
+                        while (curr >= 0) {
                             int orbID = rand.nextInt(6);
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
                             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
                             orbs.get(curr).setOrb(newBitmap, orbID);
-                            curr = curr-6;
+                            curr = curr - 6;
                         }
+                        total = 300+100*add;
                     }
                 }
             }
