@@ -26,6 +26,7 @@ public class OrbMatcher {
         activity = bFactory.activity;
     }
 
+    // TODO Don't sort orbs after every swap
     public void threeSort(){
         ArrayList<OrbView> orbs = factory.orbList;
         for(int i = 0; i<orbs.size();i++) {
@@ -48,6 +49,7 @@ public class OrbMatcher {
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), drawableID);
                             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
                             newOrb.setImageBitmap(newBitmap);
+                            // TODO Use OrbView static IDs, not drawableID
                             newOrb.setID(drawableID);
                             //add to fillList
                             fillList.add(i);
@@ -70,6 +72,7 @@ public class OrbMatcher {
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), drawableID);
                             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
                             newOrb.setImageBitmap(newBitmap);
+                            // TODO Use OrbView static IDs, not drawableID
                             newOrb.setID(drawableID);
                             //add to fillList
                             fillList.add(i);

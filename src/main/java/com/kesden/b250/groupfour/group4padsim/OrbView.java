@@ -2,6 +2,7 @@ package com.kesden.b250.groupfour.group4padsim;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -54,5 +55,16 @@ public class OrbView extends ImageView{
     public int getID()
     {
         return id;
+    }
+
+    public void setImage(Bitmap bitmap)
+    {
+        setImageBitmap(bitmap);
+    }
+
+    public void setOrb(Bitmap bitmap, int id)
+    {
+        setID(id);
+        setImage(bitmap);
     }
 }

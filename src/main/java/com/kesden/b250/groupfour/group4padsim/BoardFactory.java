@@ -99,9 +99,32 @@ public class BoardFactory {
                 }
             }
             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), drawableID);
-            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, point.y /10, true);
-            orb.setImageBitmap(newBitmap);
-            orb.setID(drawableID);
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, point.y / 10, true);
+
+            int orbID = -1;
+            switch (drawableID)
+            {
+                case R.drawable.redorb:
+                    orbID = OrbView.RED_ORB;
+                    break;
+                case R.drawable.water:
+                    orbID = OrbView.BLUE_ORB;
+                    break;
+                case R.drawable.wood:
+                    orbID = OrbView.GREEN_ORB;
+                    break;
+                case R.drawable.light:
+                    orbID = OrbView.LIGHT_ORB;
+                    break;
+                case R.drawable.dark:
+                    orbID = OrbView.DARK_ORB;
+                    break;
+                case R.drawable.heart:
+                    orbID = OrbView.HEAL_ORB;
+                    break;
+            }
+
+            orb.setOrb(newBitmap, orbID);
 
             orb.setOnTouchListener(activity);
             orb.setOnDragListener(activity);
