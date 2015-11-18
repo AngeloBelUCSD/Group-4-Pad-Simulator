@@ -25,7 +25,7 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
-    /*public void highScores(View view){
+    public void highScores(View view){
         Intent intent = new Intent(this, HighScoreActivity.class);
         startActivity(intent);
 
@@ -34,5 +34,5 @@ public class MainMenu extends AppCompatActivity {
     public void settings(View view) {
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
-    }*/
+    }
 }
