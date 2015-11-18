@@ -78,51 +78,28 @@ public class BoardFactory {
 
         for(int i = 0; i<orbList.size();i++) {
             OrbView orb = orbList.get(i);
-            int drawableID = colorList.get(rand.nextInt(6));
+            int orbID = rand.nextInt(6);
             if(i>=2)
             {
                 if(!(i%6==0) || !(i%6==1))
                 {
                     while(orbList.get(i-2).getID()==(orbList.get(i-1).getID())
-                        &&orbList.get(i-1).getID()==drawableID)
+                        &&orbList.get(i-1).getID()==orbID)
                     {
-                        drawableID = colorList.get(rand.nextInt(6));
+                        orbID = rand.nextInt(6);
                     }
                 }
                 if(i>11)
                 {
                     while(orbList.get(i-12).getID()==(orbList.get(i-6).getID())
-                            &&orbList.get(i-6).getID()==drawableID)
+                            &&orbList.get(i-6).getID()==orbID)
                     {
-                        drawableID = colorList.get(rand.nextInt(6));
+                        orbID = rand.nextInt(6);
                     }
                 }
             }
-            Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), drawableID);
+            Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, point.y / 10, true);
-
-            int orbID = -1;
-            switch (drawableID)
-            {
-                case R.drawable.redorb:
-                    orbID = OrbView.RED_ORB;
-                    break;
-                case R.drawable.water:
-                    orbID = OrbView.BLUE_ORB;
-                    break;
-                case R.drawable.wood:
-                    orbID = OrbView.GREEN_ORB;
-                    break;
-                case R.drawable.light:
-                    orbID = OrbView.LIGHT_ORB;
-                    break;
-                case R.drawable.dark:
-                    orbID = OrbView.DARK_ORB;
-                    break;
-                case R.drawable.heart:
-                    orbID = OrbView.HEAL_ORB;
-                    break;
-            }
 
             orb.setOrb(newBitmap, orbID);
 

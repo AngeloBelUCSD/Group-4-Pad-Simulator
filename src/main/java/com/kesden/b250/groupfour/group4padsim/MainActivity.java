@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+
     }
 
     public void changeText(){
@@ -116,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         int action = event.getAction();
         switch (action) {
             case DragEvent.ACTION_DRAG_STARTED:
-                // do nothing
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 // Handle Enter
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
                 // Handle Exit
-                //matcher.threeSort();
+
                 break;
             case DragEvent.ACTION_DROP:
                 if (enteredOrb != null)
@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 // Handle End
+                matcher.threeSort();
             default:
                 break;
         }

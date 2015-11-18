@@ -8,12 +8,12 @@ import android.widget.ImageView;
 
 public class OrbView extends ImageView{
 
-    public static int RED_ORB = 101;
-    public static int BLUE_ORB = 201;
-    public static int GREEN_ORB = 301;
-    public static int LIGHT_ORB = 401;
-    public static int DARK_ORB = 501;
-    public static int HEAL_ORB = 601;
+    public static int RED_ORB = 0;
+    public static int DARK_ORB = 1;
+    public static int HEAL_ORB = 2;
+    public static int LIGHT_ORB = 3;
+    public static int BLUE_ORB = 4;
+    public static int GREEN_ORB = 5;
 
     private int id;
 
