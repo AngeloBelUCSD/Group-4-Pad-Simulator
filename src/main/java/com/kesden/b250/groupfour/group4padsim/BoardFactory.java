@@ -99,7 +99,7 @@ public class BoardFactory {
                 }
             }
             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
-            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, point.y / 10, true);
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int)(point.y / 10.5), true);
 
             orb.setOrb(newBitmap, orbID);
 

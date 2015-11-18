@@ -12,30 +12,39 @@
         android:layout_above="@+id/grid"
         android:background="@drawable/blackstarbg"
         android:id="@+id/linear_layout"
+        android:orientation="vertical"
         android:weightSum="1">
 
-        <TextView
-            android:layout_width="117dp"
+        <Space
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Scores Text"
-            android:id="@+id/textView1"
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
-            android:textColor="#ff000a"
-             />
+            android:layout_weight="0.35"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Motivational Text"
+            android:text="Welcome to PADSIM"
             android:id="@+id/textView2"
-            android:layout_gravity="center_vertical"
             android:gravity="center"
             android:textColor="#fffaaf"
             android:textStyle="bold"
-            />
+            android:layout_gravity="center_horizontal" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Current Score: 0"
+            android:id="@+id/textView1"
+            android:layout_gravity="bottom|center_horizontal"
+            android:gravity="bottom"
+            android:textColor="#ff000a" />
 
     </LinearLayout>
 

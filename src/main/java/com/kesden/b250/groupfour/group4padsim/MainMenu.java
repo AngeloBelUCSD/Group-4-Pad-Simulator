@@ -10,6 +10,8 @@ import android.view.View;
 
 public class MainMenu extends AppCompatActivity {
 
+    private final int gameResult = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,13 +20,13 @@ public class MainMenu extends AppCompatActivity {
 
     public void newGame(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, gameResult);
     }
 
     public void resumeGame(View view) {
 
     }
-/*
+
     public void highScores(View view){
         Intent intent = new Intent(this, HighScoreActivity.class);
         startActivity(intent);
@@ -34,5 +36,12 @@ public class MainMenu extends AppCompatActivity {
     public void settings(View view) {
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
-    }*/
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == gameResult) {
+            // Update high scores here
+        }
+    }
 }

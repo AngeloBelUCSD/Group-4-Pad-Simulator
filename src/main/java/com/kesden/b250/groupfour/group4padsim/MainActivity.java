@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private Random rand;
     private OrbMatcher matcher;
     private int lScore;
+    private boolean dragStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,32 +112,30 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         String[] motiArray = {"You can do it!", "Believe in yourself!", "Brain power",
                 "Caffeine overload","Don't give up", "Mega combo time!", "Good Luck!"};
 
+        TextView motiText = (TextView)findViewById(R.id.textView2);
+        TextView scoreText = (TextView)findViewById(R.id.textView1);
+        int turnScore = matcher.total;
 
         switch(changeNum){
             case 1:
                 // Score change when match occurs
-                TextView motiText = (TextView)findViewById(R.id.textView2);
-                TextView scoreText = (TextView)findViewById(R.id.textView1);
                 // update score variable. Will use placeholder for now.
-                int turnScore = matcher.total;
+                motiText.setText(motiArray[rand.nextInt(7)]);
+                break;
+            case 2:
                 lScore+=turnScore;
+                scoreText.setText("Current Score: " + Integer.toString(lScore));
 
-                scoreText.setText(Integer.toString(lScore));
-                motiText = (TextView)findViewById(R.id.textView2);
-                matcher.total=0;
-                if(turnScore==0)
-                {
-                    motiText.setText(motiArray[rand.nextInt(7)]);
-                }
-                else {
-                    motiText.setText(turnScore / 100 + " COMBO!");
-                }
+                if (turnScore > 0)
+                    motiText.setText("Matched " + turnScore / 100 + " Orbs!");
                 break;
 
             default:
                 break;
 
         }
+
+        ((View) scoreText.getParent()).invalidate();
 
 
     }
@@ -172,13 +171,13 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
                 enteredOrb = null;
                 draggedOrb = null;
-
-                // update Score
-                changeText(2);
-
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                matcher.threeSort();
+                if (dragStarted) {
+                    matcher.threeSort();
+                    changeText(2);
+                    dragStarted = false;
+                }
                 // Handle End
             default:
                 break;
@@ -196,6 +195,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
+                dragStarted = true;
+                matcher.total = 0;
                 draggedOrb = (OrbView) v;
                 draggedOrb.setVisibility(View.INVISIBLE);
                 Log.d(TAG, "Orb ID is " + draggedOrb.getID());

@@ -88,10 +88,10 @@ public class OrbMatcher {
                             }
                             int orbID = rand.nextInt(6);
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
-                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
+                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
                             orbs.get(curr).setOrb(newBitmap, orbID);
                         }
-                        total = 300+100*add;
+                        total += 300+100*add;
                     }
                 }
                 if (i > 11) {
@@ -119,11 +119,11 @@ public class OrbMatcher {
                         while (curr >= 0) {
                             int orbID = rand.nextInt(6);
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
-                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
+                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
                             orbs.get(curr).setOrb(newBitmap, orbID);
                             curr = curr - 6;
                         }
-                        total = 300+100*add;
+                        total += 300+100*add;
                     }
                 }
             }
