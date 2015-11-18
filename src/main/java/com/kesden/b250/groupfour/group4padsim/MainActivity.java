@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
                 // Handle Exit
-                matcher.threeSort();
+                //matcher.threeSort();
                 break;
             case DragEvent.ACTION_DROP:
                 if (enteredOrb != null)
@@ -175,12 +175,16 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         return false;
     }
 
-    public void swapOrbImages(ImageView view1, ImageView view2) {
+    public void swapOrbImages(OrbView view1, OrbView view2) {
         if (view1 != null && view2 != null) {
             Bitmap swap;
             swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
             view1.setImageBitmap(((BitmapDrawable) view2.getDrawable()).getBitmap());
             view2.setImageBitmap(swap);
+
+            int swapID = view1.getID();
+            view1.setID(view2.getID());
+            view2.setID(swapID);
 
         }
     }
