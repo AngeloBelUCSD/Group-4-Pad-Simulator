@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private BoardFactory bFactory;
     private Random rand;
     private OrbMatcher matcher;
+    private int lScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
+        lScore = 0;
+
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
     }
 
-    public void changeText(){
+    public void changeText(int changeNum){
         // Gives motivational text on top layout.
         /* We could pass something here to signify motivational text or other kinds of text to change
           and add more TextViews. i.e. pass something to signify score and change user score on top. */
@@ -82,8 +85,32 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         String[] motiArray = {"You can do it!", "Believe in yourself!", "Brain power",
                 "Caffeine overload","Don't give up", "Mega combo time!", "Good Luck!"};
 
-        TextView motiText = (TextView)findViewById(R.id.textView2);
-        motiText.setText(motiArray[rand.nextInt(7)]);
+        switch(changeNum){
+            case 1:
+                // Motivational Text when dragging an orb.
+                TextView motiText = (TextView)findViewById(R.id.textView2);
+                motiText.setText(motiArray[rand.nextInt(7)]);
+                break;
+
+            case 2:
+                // Score change when match occurs
+                // TODO UPDATE when orbMatch works
+                TextView scoreText = (TextView)findViewById(R.id.textView1);
+                // update score variable. Will use placeholder for now.
+                lScore += 100;
+                scoreText.setText(Integer.toString(lScore));
+                break;
+
+            case 3:
+                // TODO
+                // Combo Text Awards in here
+                break;
+
+            default:
+                break;
+
+        }
+
 
     }
 
@@ -145,6 +172,9 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 enteredOrb = null;
                 draggedOrb = null;
 
+                // update Score
+                changeText(2);
+
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 // Handle End
@@ -160,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // PRESSED
-                changeText(); // changes text on top layout.
+                changeText(1); // changes text on top layout.
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
