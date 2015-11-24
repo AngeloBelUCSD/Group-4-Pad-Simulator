@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.util.Arrays.*;
 
@@ -22,17 +20,13 @@ public class OrbMatcher {
     private BoardFactory factory;
     private Random rand;
     private ArrayList<ArrayList<Integer>> comboList;
-    private ArrayList<Integer> redCombo;
-    private ArrayList<Integer> darkCombo;
-    private ArrayList<Integer> healCombo;
-    private ArrayList<Integer> lightCombo;
-    private ArrayList<Integer> blueCombo;
-    private ArrayList<Integer> greenCombo;
+    private ArrayList<Integer> redCombo, darkCombo, healCombo,lightCombo, blueCombo, greenCombo;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     MainActivity activity;
 
+    //Constructor takes in a BoardFactory object
     public OrbMatcher(BoardFactory bFactory){
         rand = new Random();
         this.factory = bFactory;
@@ -48,22 +42,28 @@ public class OrbMatcher {
         lightCombo = new ArrayList<Integer>();
         blueCombo = new ArrayList<Integer>();
         greenCombo = new ArrayList<Integer>();
-        comboList.add(0,redCombo);
-        comboList.add(1,darkCombo);
+        comboList.add(0, redCombo);
+        comboList.add(1, darkCombo);
         comboList.add(2, healCombo);
         comboList.add(3, lightCombo);
         comboList.add(4, blueCombo);
-        comboList.add(5,greenCombo);
+        comboList.add(5, greenCombo);
 
     }
 
 
+    //function to sort out combos
     public void threeSort(){
         ArrayList<OrbView> orbs = factory.orbList;
         for(int i = 2; i<orbs.size();i++) {
             OrbView orb = orbs.get(i);
+            /*The algorithm uses these if-statements due to the constraint of a one-dimensional array of orbs.
+            The first condition of i>=2, along with the subsequent % conditions are to take orbs from the 3rd
+            column onward. The second set of conditions are to take orbs from the 3rd row onward.
+             */
             if (i >= 2) {
                 if (!(i % 6 == 0) || !(i % 6 == 1)) {
+                    //here we go horizontal checks for combos
                     if (orbs.get(i - 2).getID() == (orbs.get(i - 1).getID())
                             && orbs.get(i - 1).getID() == orb.getID()) {
                         Log.d(TAG, "horizontal check");
@@ -71,6 +71,7 @@ public class OrbMatcher {
                         int check = i;
                         int add = 0;
                         int type = orb.getID();
+                        //obtain the length of the combo(for combos longer than 3)
                         while (check % 6 != 5 && orbs.get(check).getID() == orbs.get(check + 1).getID()) {
                             check++;
                             add++;
@@ -94,7 +95,9 @@ public class OrbMatcher {
                         total += 300+100*add;
                     }
                 }
+                //second set of conditions
                 if (i > 11) {
+                    //check for vertical combos
                     if (orbs.get(i - 12).getID() == (orbs.get(i - 6).getID())
                             && orbs.get(i - 6).getID() == orb.getID()) {
                         Log.d(TAG, "vertical check");
@@ -102,6 +105,7 @@ public class OrbMatcher {
                         int curr = i;
                         int add = 0;
                         int type = orb.getID();
+                        //obtain length of combo
                         while (curr + 6 < 30 && orbs.get(curr).getID() == orbs.get(curr + 6).getID()) {
                             curr += 6;
                             add += 6;
@@ -123,7 +127,7 @@ public class OrbMatcher {
                             orbs.get(curr).setOrb(newBitmap, orbID);
                             curr = curr - 6;
                         }
-                        total += 300+100*add;
+                        total += 300+100*add/6;
                     }
                 }
             }
