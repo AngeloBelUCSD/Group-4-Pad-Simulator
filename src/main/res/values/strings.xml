@@ -1,7 +1,39 @@
 <resources>
-    <string name="app_name">Group4PadSim</string>
+    <string name="app_name">PADSIM</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_high_score">HighScoreActivity</string>
+
+    <!-- Setting strings go here. -->
+
+    <string name="difficulty_title">Difficulty</string>
+    <string-array name="difficulty_entries">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+    <string-array name="difficulty_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="mode_title">Game Mode</string>
+    <string-array name="mode_entries">
+        <item>Endless</item>
+        <item>Time Attack</item>
+    </string-array>
+    <string-array name="mode_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string name="list_def">0</string>
+
+    <string name="reset_hs_key">reset_high_scores</string>
+    <string name="reset_hs_button">Reset High Scores</string>
+    <string name="reset_hs_summ">Reset all high scores to zero.</string>
+
+
 </resources>

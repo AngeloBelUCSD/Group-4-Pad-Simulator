@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="difficulty"
+        android:title="@string/difficulty_title"
+        android:summary=""
+        android:entries="@array/difficulty_entries"
+        android:entryValues="@array/difficulty_values"
+        android:defaultValue="@string/list_def"
+        android:positiveButtonText="@null"
+        android:negativeButtonText="@null"/>
+
+    <ListPreference
+        android:key="game_mode"
+        android:title="@string/mode_title"
+        android:summary=""
+        android:entries="@array/mode_entries"
+        android:entryValues="@array/mode_values"
+        android:defaultValue="@string/list_def"
+        android:positiveButtonText="@null"
+        android:negativeButtonText="@null"/>
+
+    <Preference
+        android:key="@string/reset_hs_key"
+        android:title="@string/reset_hs_button"
+        android:summary="@string/reset_hs_summ"/>
+
+
+
+
+</PreferenceScreen>

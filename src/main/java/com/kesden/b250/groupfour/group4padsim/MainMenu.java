@@ -23,10 +23,6 @@ public class MainMenu extends AppCompatActivity {
         startActivityForResult(intent, gameResult);
     }
 
-    public void resumeGame(View view) {
-
-    }
-
     public void highScores(View view){
         Intent intent = new Intent(this, HighScoreActivity.class);
         startActivity(intent);

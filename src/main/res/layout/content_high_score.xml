@@ -26,33 +26,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_gravity="center_horizontal"
-            android:text="1. 500"/>
+            android:id="@+id/hs1"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_horizontal"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/hs2"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_gravity="center_horizontal"
-            android:text="2. 400"/>
+            android:layout_gravity="center_horizontal" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/hs3"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_gravity="center_horizontal"
-            android:text="3. 300"/>
+            android:layout_gravity="center_horizontal" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/hs4"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_gravity="center_horizontal"
-            android:text="4. 200"/>
+            android:layout_gravity="center_horizontal" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/hs5"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_gravity="center_horizontal"
-            android:text="5. 100"/>
+            android:layout_gravity="center_horizontal" />
 
 
     </LinearLayout>
