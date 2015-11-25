@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="hs1"
+        android:defaultValue="@integer/hs_default"
+        />
+
+    <Preference
+        android:key="hs2"
+        android:defaultValue="@integer/hs_default"
+        />
+
+    <Preference
+        android:key="hs3"
+        android:defaultValue="@integer/hs_default"
+        />
+
+    <Preference
+        android:key="hs4"
+        android:defaultValue="@integer/hs_default"
+        />
+
+    <Preference
+        android:key="hs5"
+        android:defaultValue="@integer/hs_default"
+        />
+
+</PreferenceScreen>
