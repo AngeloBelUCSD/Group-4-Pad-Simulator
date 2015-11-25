@@ -2,10 +2,12 @@ package com.kesden.b250.groupfour.group4padsim;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -76,6 +78,55 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
+    }
+
+
+
+    /*
+    Horrible, horrible c/p code. Will figure out how to implement this more elegantly later.
+    */
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        int newHS = lScore;
+
+        int[] hs = new int[5];
+        String[] hs_keys = {"hs1", "hs2", "hs3", "hs4", "hs5"};
+        int[] new_hs = new int[5];
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        for(int i = 0; i < 5; i++){
+
+            hs[i] = sharedPref.getInt(hs_keys[i], 0);
+
+        }
+        if(newHS < hs[4]) return;
+
+        int replace = -1;
+        for(int i = 0; i < 5; i++){
+            if(hs[i] > newHS) new_hs[i] = hs[i];
+            if(hs[i] <= newHS){
+                if(replace == -1){
+
+                    replace = hs[i];
+                    new_hs[i] = newHS;
+
+                }else{
+
+                    new_hs[i] = replace;
+                    replace = hs[i];
+
+                }
+            }
+        }
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        for(int i = 0; i < 5; i++) {
+
+            editor.putInt(hs_keys[i], new_hs[i]);
+        }
+        editor.commit();
     }
 
 
