@@ -66,7 +66,6 @@ public class OrbMatcher {
                     //here we go horizontal checks for combos
                     if (orbs.get(i - 2).getID() == (orbs.get(i - 1).getID())
                             && orbs.get(i - 1).getID() == orb.getID()) {
-                        Log.d(TAG, "horizontal check");
                         //tag horizontal 3s
                         int check = i;
                         int add = 0;
@@ -76,9 +75,10 @@ public class OrbMatcher {
                             check++;
                             add++;
                         }
+                        //will be handled by orb factory cascade, in the meantime will comment out
 
                         for (int x = i - 2; x < i + add + 1; x++) {
-                            threeList[x] = type;
+                            threeList[x] = type;/*
                             int curr = x;
                             while (curr - 6 >= 0) {
                                 OrbView topOrb = orbs.get(curr - 6);
@@ -91,8 +91,8 @@ public class OrbMatcher {
                             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
                             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
                             orbs.get(curr).setOrb(newBitmap, orbID);
+                        }*/
                         }
-                        total += 300+100*add;
                     }
                 }
                 //second set of conditions
@@ -100,7 +100,6 @@ public class OrbMatcher {
                     //check for vertical combos
                     if (orbs.get(i - 12).getID() == (orbs.get(i - 6).getID())
                             && orbs.get(i - 6).getID() == orb.getID()) {
-                        Log.d(TAG, "vertical check");
                         //tag vertical 3s
                         int curr = i;
                         int add = 0;
@@ -113,6 +112,7 @@ public class OrbMatcher {
                         for (int x = i - 12; x < curr + 1; x += 6) {
                             threeList[x] = type;
                         }
+                        /* same reason as above
                         while (curr - 18 - add >= 0) {
                             OrbView topOrb = orbs.get(curr - 18 - add);
                             OrbView currOrb = orbs.get(curr);
@@ -126,8 +126,7 @@ public class OrbMatcher {
                             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
                             orbs.get(curr).setOrb(newBitmap, orbID);
                             curr = curr - 6;
-                        }
-                        total += 300+100*add/6;
+                        }*/
                     }
                 }
             }
@@ -137,13 +136,19 @@ public class OrbMatcher {
 
     ///////////////////////////TEST CODE/////////////////////////////
 
-    /*
+
     public void sort()
     {
+
         threeSort();
         comboCheck(threeList);
+
+        int[] result = comboSize();
         replaceOrbs();
         resetLists();
+        Log.d(TAG, "Red orb: "+result[0]+" Dark orb: "+result[1]+" Heal orb: "
+              + result[2]+" light orb: "+result[3]+" blue orb: "+result[4]+" green orb: "
+                + result[5]);
     }
     public void comboCheck(int[] threeList)
     {
@@ -178,6 +183,16 @@ public class OrbMatcher {
             }
         }
     }
+    public int[] comboSize()
+    {
+        int[] comboSize = new int[6];
+        for(int i = 0; i<comboSize.length;i++){
+            comboSize[i] = comboList.get(i).size();
+            if(comboSize[i]==2) comboSize[i]=3;
+        }
+        return comboSize;
+    }
+
     public void replaceOrbs()
     {
         int test = 0;
@@ -203,6 +218,7 @@ public class OrbMatcher {
             test++;
         }
     }
+
     public void resetLists()
     {
         threeList = new int[30];
@@ -211,6 +227,6 @@ public class OrbMatcher {
         {
             x.clear();
         }
-    }*/
+    }
 
 }
