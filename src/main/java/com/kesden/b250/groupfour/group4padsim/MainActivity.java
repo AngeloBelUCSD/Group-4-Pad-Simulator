@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private OrbMatcher matcher;
     private int lScore;
     private boolean dragStarted;
+    private GameManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
+        manager = new GameManager(matcher);
         lScore = 0;
 
 
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
         TextView motiText = (TextView)findViewById(R.id.textView2);
         TextView scoreText = (TextView)findViewById(R.id.textView1);
-        int turnScore = matcher.total;
+        int turnScore = manager.getScore();
 
         switch(changeNum){
             case 1:
@@ -247,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
                 dragStarted = true;
-                matcher.total = 0;
+                manager.resetScore();
                 draggedOrb = (OrbView) v;
                 draggedOrb.setVisibility(View.INVISIBLE);
                 Log.d(TAG, "Orb ID is " + draggedOrb.getID());
