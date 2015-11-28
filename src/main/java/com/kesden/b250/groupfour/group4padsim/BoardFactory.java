@@ -3,16 +3,25 @@ package com.kesden.b250.groupfour.group4padsim;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 
 public class BoardFactory {
 
     private Random rand;
     public ArrayList<Integer> colorList;
     public ArrayList<OrbView> orbList;
+
+    //public ArrayList<OrbView> orbListInvis;
+
 
     MainActivity activity;
     Point point;
@@ -33,6 +42,17 @@ public class BoardFactory {
         this.point = point;
 
         orbList = new ArrayList<>(size);
+
+
+        /*orbListInvis = new ArrayList<>(6);
+        orbListInvis.add(0, (OrbView) activity.findViewById(R.id.imageView31));
+        orbListInvis.add(1, (OrbView) activity.findViewById(R.id.imageView32));
+        orbListInvis.add(2, (OrbView) activity.findViewById(R.id.imageView33));
+        orbListInvis.add(3, (OrbView) activity.findViewById(R.id.imageView34));
+        orbListInvis.add(4, (OrbView) activity.findViewById(R.id.imageView35));
+        orbListInvis.add(5, (OrbView) activity.findViewById(R.id.imageView36));*/
+
+
 
     }
 
@@ -69,14 +89,87 @@ public class BoardFactory {
         list.add(27,(OrbView) activity.findViewById(R.id.imageView28));
         list.add(28,(OrbView) activity.findViewById(R.id.imageView29));
         list.add(29,(OrbView) activity.findViewById(R.id.imageView30));
+
+        /* The invisible Orbs */
+        list.add(30,(OrbView) activity.findViewById(R.id.imageView31));
+        list.add(31,(OrbView) activity.findViewById(R.id.imageView32));
+        list.add(32,(OrbView) activity.findViewById(R.id.imageView33));
+        list.add(33,(OrbView) activity.findViewById(R.id.imageView34));
+        list.add(34,(OrbView) activity.findViewById(R.id.imageView35));
+        list.add(35,(OrbView) activity.findViewById(R.id.imageView36));
+
+
     }
 
+
+    public OrbView createOrb(int row, int col) {
+
+        /**/
+        int calcI = (row * 5) + col;
+        OrbView orb = orbList.get(calcI);
+        int orbID = rand.nextInt(6);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
+
+        orb.setOrb(newBitmap, orbID);
+        orb.setOnTouchListener(activity);
+        orb.setOnDragListener(activity);
+
+        //set invisible here
+        orb.setVisibility(View.INVISIBLE);
+
+        return orb;
+    }
+
+    public void cascadeOrb(int row, int col) {
+
+        /* targetOrb is invisible */
+        OrbView targetOrb = createOrb(row, col);
+        targetOrb.setOnTouchListener(null);
+        targetOrb.setOnDragListener(null);
+
+        /* topOrb is initially invisible */
+        int orbID = rand.nextInt(6);
+        OrbView topOrb = orbList.get(30 + col);
+        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
+        topOrb.setVisibility(View.VISIBLE);
+        topOrb.setOnTouchListener(activity);
+        topOrb.setOnDragListener(activity);
+
+
+        TranslateAnimation cascade = new TranslateAnimation(topOrb.getX(),
+                targetOrb.getX(), topOrb.getY(), targetOrb.getY());
+        cascade.setDuration(250);
+
+        topOrb.startAnimation(cascade);
+
+
+        /* Begin swap */
+        swapOrbImages(topOrb, targetOrb);
+
+    }
+
+    public void swapOrbImages(OrbView view1, OrbView view2) {
+        if (view1 != null && view2 != null) {
+            Bitmap swap;
+            swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
+            view1.setImageBitmap(((BitmapDrawable) view2.getDrawable()).getBitmap());
+            view2.setImageBitmap(swap);
+
+            int swapID = view1.getID();
+            view1.setID(view2.getID());
+            view2.setID(swapID);
+
+        }
+    }
 
 
     public void populateBoard() {
         createOrbs(orbList);
 
-        for(int i = 0; i<orbList.size();i++) {
+        for(int i = 0; i<orbList.size()-6;i++) {
             OrbView orb = orbList.get(i);
             int orbID = rand.nextInt(6);
             if(i>=2)
@@ -106,5 +199,19 @@ public class BoardFactory {
             orb.setOnTouchListener(activity);
             orb.setOnDragListener(activity);
         }
+
+        /* Making the top row. Invisible */
+        for(int i = orbList.size()-6; i<orbList.size(); i++) {
+            OrbView orb = orbList.get(i);
+            int orbID = rand.nextInt(1);
+            Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
+
+            orb.setOrb(newBitmap, orbID);
+            orb.setVisibility(View.INVISIBLE);
+
+        }
+
+
     }
 }
