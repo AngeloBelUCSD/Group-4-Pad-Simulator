@@ -20,7 +20,6 @@ public class BoardFactory {
     public ArrayList<Integer> colorList;
     public ArrayList<OrbView> orbList;
 
-    //public ArrayList<OrbView> orbListInvis;
 
 
     MainActivity activity;
@@ -42,16 +41,6 @@ public class BoardFactory {
         this.point = point;
 
         orbList = new ArrayList<>(size);
-
-
-        /*orbListInvis = new ArrayList<>(6);
-        orbListInvis.add(0, (OrbView) activity.findViewById(R.id.imageView31));
-        orbListInvis.add(1, (OrbView) activity.findViewById(R.id.imageView32));
-        orbListInvis.add(2, (OrbView) activity.findViewById(R.id.imageView33));
-        orbListInvis.add(3, (OrbView) activity.findViewById(R.id.imageView34));
-        orbListInvis.add(4, (OrbView) activity.findViewById(R.id.imageView35));
-        orbListInvis.add(5, (OrbView) activity.findViewById(R.id.imageView36));*/
-
 
 
     }
@@ -113,8 +102,6 @@ public class BoardFactory {
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
 
         orb.setOrb(newBitmap, orbID);
-        /*orb.setOnTouchListener(activity);
-        orb.setOnDragListener(activity);*/
 
         //set invisible here
         orb.setVisibility(View.INVISIBLE);
@@ -122,12 +109,11 @@ public class BoardFactory {
         return orb;
     }
 
-    public void cascadeOrb(int row, int col) {
+    public void cascadeNewOrb(int row, int col) {
+
 
         /* targetOrb is invisible */
         OrbView targetOrb = createOrb(row, col);
-        /*targetOrb.setOnTouchListener(null);
-        targetOrb.setOnDragListener(null);*/
 
         /* topOrb is initially invisible */
         int orbID = rand.nextInt(6);
@@ -137,8 +123,20 @@ public class BoardFactory {
         topOrb.setOrb(newBitmap, orbID);
         topOrb.setVisibility(View.VISIBLE);
 
-        /*topOrb.setOnTouchListener(activity);
-        topOrb.setOnDragListener(activity);*/
+        /* calls cascadeAnimation to animate from top row to target row */
+        cascadeAnimation(topOrb, targetOrb);
+
+    }
+
+    public void cascadeExistingOrb(OrbView topOrb, OrbView targetOrb) {
+
+        cascadeAnimation(topOrb, targetOrb);
+
+    }
+
+    private void cascadeAnimation(OrbView topOrb, OrbView targetOrb) {
+
+        /* Takes two orbViews. Animating Orb and its target orb (for the cell location) */
 
         float topX = topOrb.getX();
         float topY = topOrb.getY();
@@ -167,6 +165,8 @@ public class BoardFactory {
         targetOrb.setVisibility(View.VISIBLE);
 
     }
+
+
 
     public void swapOrbImages(OrbView view1, OrbView view2) {
         if (view1 != null && view2 != null) {
