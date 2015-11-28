@@ -102,7 +102,7 @@ public class BoardFactory {
     }
 
 
-    public OrbView createOrb(int row, int col) {
+    private OrbView createOrb(int row, int col) {
 
         /**/
         int calcI = (row * 5) + col;
@@ -113,8 +113,8 @@ public class BoardFactory {
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
 
         orb.setOrb(newBitmap, orbID);
-        orb.setOnTouchListener(activity);
-        orb.setOnDragListener(activity);
+        /*orb.setOnTouchListener(activity);
+        orb.setOnDragListener(activity);*/
 
         //set invisible here
         orb.setVisibility(View.INVISIBLE);
@@ -126,28 +126,45 @@ public class BoardFactory {
 
         /* targetOrb is invisible */
         OrbView targetOrb = createOrb(row, col);
-        targetOrb.setOnTouchListener(null);
-        targetOrb.setOnDragListener(null);
+        /*targetOrb.setOnTouchListener(null);
+        targetOrb.setOnDragListener(null);*/
 
         /* topOrb is initially invisible */
         int orbID = rand.nextInt(6);
         OrbView topOrb = orbList.get(30 + col);
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
+        topOrb.setOrb(newBitmap, orbID);
         topOrb.setVisibility(View.VISIBLE);
-        topOrb.setOnTouchListener(activity);
-        topOrb.setOnDragListener(activity);
+
+        /*topOrb.setOnTouchListener(activity);
+        topOrb.setOnDragListener(activity);*/
+
+        float topX = topOrb.getX();
+        float topY = topOrb.getY();
+        float targetX = targetOrb.getX();
+        float targetY = targetOrb.getY();
 
 
-        TranslateAnimation cascade = new TranslateAnimation(topOrb.getX(),
-                targetOrb.getX(), topOrb.getY(), targetOrb.getY());
+        TranslateAnimation cascade = new TranslateAnimation(topX, targetX, topY, targetY);
         cascade.setDuration(250);
+
+        TranslateAnimation cascadeBack = new TranslateAnimation(targetX, topX, targetY, topY);
+        cascadeBack.setDuration(1);
+
 
         topOrb.startAnimation(cascade);
 
+        /* Set invisible and quickly put it back to top row. */
+        topOrb.setVisibility(View.INVISIBLE);
+        topOrb.startAnimation(cascadeBack);
 
-        /* Begin swap */
+
+        /* Quickly swap after cascade animation
+        *  What swaps is the invisible topOrb that went back to the top row
+        *  and the invisible target orb.*/
         swapOrbImages(topOrb, targetOrb);
+        targetOrb.setVisibility(View.VISIBLE);
 
     }
 
