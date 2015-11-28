@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private int lScore;
     private boolean dragStarted;
     private GameManager manager;
+    private boolean timerEnded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,7 +207,11 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             changeText(2);
             dragStarted = false;
             manager.setEndTimer(false);
-            v.invalidate();
+            timerEnded = true;
+        }
+        else if(timerEnded){
+            if(action == DragEvent.ACTION_DRAG_ENDED)
+                timerEnded = false;
         }
         else{
             switch (action) {
@@ -264,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
                 dragStarted = true;
+                manager.setEndTimer(false);
                 manager.startTimer();
                 manager.resetScore();
                 draggedOrb = (OrbView) v;
