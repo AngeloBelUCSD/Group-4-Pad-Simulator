@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         bFactory.populateBoard();
 
         /* Add listener to main layout */
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+        RelativeLayout mainLayout =(RelativeLayout) findViewById(R.id.main_layout);
         mainLayout.setOnDragListener(this);
 
         /* Add padding to Grid Layout */
@@ -195,45 +195,60 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     @Override
     public boolean onDrag(View v, DragEvent event) {
         int action = event.getAction();
-        switch (action) {
-            case DragEvent.ACTION_DRAG_STARTED:
-                break;
-            case DragEvent.ACTION_DRAG_ENTERED:
-                // Handle Enter
-                if (v instanceof ImageView) {
+        if(manager.getEndTimer()) {
+            if (enteredOrb != null)
+                enteredOrb.setVisibility(View.VISIBLE);
+            if (draggedOrb != null)
+                draggedOrb.setVisibility(View.VISIBLE);
+            enteredOrb = null;
+            draggedOrb = null;
+            matcher.threeSort();
+            changeText(2);
+            dragStarted = false;
+            manager.setEndTimer(false);
+            v.invalidate();
+        }
+        else{
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // Handle Enter
+                    if (v instanceof ImageView) {
 
-                    if (enteredOrb != null) {
-                        draggedOrb = enteredOrb;
+                        if (enteredOrb != null) {
+                            draggedOrb = enteredOrb;
+                        }
+
+                        enteredOrb = (OrbView) v;
+                        swapOrbImages(draggedOrb, enteredOrb);
+                        draggedOrb.setVisibility(View.VISIBLE);
+                        enteredOrb.setVisibility(View.INVISIBLE);
                     }
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    // Handle Exit
 
-                    enteredOrb = (OrbView) v;
-                    swapOrbImages(draggedOrb, enteredOrb);
-                    draggedOrb.setVisibility(View.VISIBLE);
-                    enteredOrb.setVisibility(View.INVISIBLE);
-                }
-                break;
-            case DragEvent.ACTION_DRAG_EXITED:
-                // Handle Exit
+                    break;
+                case DragEvent.ACTION_DROP:
+                    if (enteredOrb != null)
+                        enteredOrb.setVisibility(View.VISIBLE);
+                    if (draggedOrb != null)
+                        draggedOrb.setVisibility(View.VISIBLE);
 
-                break;
-            case DragEvent.ACTION_DROP:
-                if (enteredOrb != null)
-                    enteredOrb.setVisibility(View.VISIBLE);
-                if (draggedOrb != null)
-                    draggedOrb.setVisibility(View.VISIBLE);
-
-                enteredOrb = null;
-                draggedOrb = null;
-                break;
-            case DragEvent.ACTION_DRAG_ENDED:
-                if (dragStarted) {
-                    matcher.threeSort();
-                    changeText(2);
-                    dragStarted = false;
-                }
-                // Handle End
-            default:
-                break;
+                    enteredOrb = null;
+                    draggedOrb = null;
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    if (dragStarted) {
+                        matcher.threeSort();
+                        changeText(2);
+                        dragStarted = false;
+                    }
+                    // Handle End
+                default:
+                    break;
+            }
         }
         return true;
     }
@@ -249,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
                 dragStarted = true;
+                manager.startTimer();
                 manager.resetScore();
                 draggedOrb = (OrbView) v;
                 draggedOrb.setVisibility(View.INVISIBLE);
