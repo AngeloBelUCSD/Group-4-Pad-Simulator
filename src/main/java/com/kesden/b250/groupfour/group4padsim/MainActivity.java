@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private OrbMatcher matcher;
     private int lScore;
     private boolean dragStarted;
+    private GameManager manager;
+    private boolean timerEnded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
+        manager = new GameManager(matcher);
         lScore = 0;
 
 
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         bFactory.populateBoard();
 
         /* Add listener to main layout */
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+        RelativeLayout mainLayout =(RelativeLayout) findViewById(R.id.main_layout);
         mainLayout.setOnDragListener(this);
 
         /* Add padding to Grid Layout */
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
         TextView motiText = (TextView)findViewById(R.id.textView2);
         TextView scoreText = (TextView)findViewById(R.id.textView1);
-        int turnScore = matcher.total;
+        int turnScore = manager.getScore();
 
         switch(changeNum){
             case 1:
@@ -193,45 +196,64 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     @Override
     public boolean onDrag(View v, DragEvent event) {
         int action = event.getAction();
-        switch (action) {
-            case DragEvent.ACTION_DRAG_STARTED:
-                break;
-            case DragEvent.ACTION_DRAG_ENTERED:
-                // Handle Enter
-                if (v instanceof ImageView) {
+        if(manager.getEndTimer()) {
+            if (enteredOrb != null)
+                enteredOrb.setVisibility(View.VISIBLE);
+            if (draggedOrb != null)
+                draggedOrb.setVisibility(View.VISIBLE);
+            enteredOrb = null;
+            draggedOrb = null;
+            matcher.threeSort();
+            changeText(2);
+            dragStarted = false;
+            manager.setEndTimer(false);
+            timerEnded = true;
+        }
+        else if(timerEnded){
+            if(action == DragEvent.ACTION_DRAG_ENDED)
+                timerEnded = false;
+        }
+        else{
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // Handle Enter
+                    if (v instanceof ImageView) {
 
-                    if (enteredOrb != null) {
-                        draggedOrb = enteredOrb;
+                        if (enteredOrb != null) {
+                            draggedOrb = enteredOrb;
+                        }
+
+                        enteredOrb = (OrbView) v;
+                        swapOrbImages(draggedOrb, enteredOrb);
+                        draggedOrb.setVisibility(View.VISIBLE);
+                        enteredOrb.setVisibility(View.INVISIBLE);
                     }
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    // Handle Exit
 
-                    enteredOrb = (OrbView) v;
-                    swapOrbImages(draggedOrb, enteredOrb);
-                    draggedOrb.setVisibility(View.VISIBLE);
-                    enteredOrb.setVisibility(View.INVISIBLE);
-                }
-                break;
-            case DragEvent.ACTION_DRAG_EXITED:
-                // Handle Exit
+                    break;
+                case DragEvent.ACTION_DROP:
+                    if (enteredOrb != null)
+                        enteredOrb.setVisibility(View.VISIBLE);
+                    if (draggedOrb != null)
+                        draggedOrb.setVisibility(View.VISIBLE);
 
-                break;
-            case DragEvent.ACTION_DROP:
-                if (enteredOrb != null)
-                    enteredOrb.setVisibility(View.VISIBLE);
-                if (draggedOrb != null)
-                    draggedOrb.setVisibility(View.VISIBLE);
-
-                enteredOrb = null;
-                draggedOrb = null;
-                break;
-            case DragEvent.ACTION_DRAG_ENDED:
-                if (dragStarted) {
-                    matcher.sort();
-                    changeText(2);
-                    dragStarted = false;
-                }
-                // Handle End
-            default:
-                break;
+                    enteredOrb = null;
+                    draggedOrb = null;
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    if (dragStarted) {
+                        matcher.sort();
+                        changeText(2);
+                        dragStarted = false;
+                    }
+                    // Handle End
+                default:
+                    break;
+            }
         }
         return true;
     }
@@ -247,7 +269,9 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(data, shadowBuilder, v, 0);
                 dragStarted = true;
-                matcher.total = 0;
+                manager.setEndTimer(false);
+                manager.startTimer();
+                manager.resetScore();
                 draggedOrb = (OrbView) v;
                 draggedOrb.setVisibility(View.INVISIBLE);
                 Log.d(TAG, "Orb ID is " + draggedOrb.getID());

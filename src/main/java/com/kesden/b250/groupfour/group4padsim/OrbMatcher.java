@@ -55,7 +55,7 @@ public class OrbMatcher {
     //function to sort out combos
     public void threeSort(){
         ArrayList<OrbView> orbs = factory.orbList;
-        for(int i = 2; i<orbs.size();i++) {
+        for(int i = 2; i<30;i++) {
             OrbView orb = orbs.get(i);
             /*The algorithm uses these if-statements due to the constraint of a one-dimensional array of orbs.
             The first condition of i>=2, along with the subsequent % conditions are to take orbs from the 3rd
@@ -77,7 +77,7 @@ public class OrbMatcher {
                         }
                         //will be handled by orb factory cascade, in the meantime will comment out
 
-                        for (int x = i - 2; x < i + add + 1; x++) {
+                        for (int x = i - 2; x < i + add +1; x++) {
                             threeList[x] = type;/*
                             int curr = x;
                             while (curr - 6 >= 0) {
