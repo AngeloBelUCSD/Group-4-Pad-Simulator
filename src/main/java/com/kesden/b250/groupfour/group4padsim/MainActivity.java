@@ -27,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private boolean dragStarted;
     private GameManager manager;
     private boolean timerEnded = false;
+    private int mode;
+    private TextView timeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +66,12 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
-        manager = new GameManager(matcher);
         lScore = 0;
-
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mode = Integer.parseInt(sharedPref.getString("game_mode","0"));
+        manager = new GameManager(matcher, mode);
+        timeText = (TextView) findViewById(R.id.textView3);
+        manager.startUpdateTimer(0,timeText);
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
@@ -196,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     @Override
     public boolean onDrag(View v, DragEvent event) {
         int action = event.getAction();
-        if(manager.getEndTimer()) {
+        if(manager.getEndTimer() || manager.isGameOver()) {
             if (enteredOrb != null)
                 enteredOrb.setVisibility(View.VISIBLE);
             if (draggedOrb != null)
@@ -205,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             draggedOrb = null;
             matcher.threeSort();
             changeText(2);
+            manager.startUpdateTimer(manager.getScore()/100, timeText);
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
@@ -248,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
+                        manager.startUpdateTimer(manager.getScore()/100, timeText);
                         dragStarted = false;
                     }
                     // Handle End
@@ -263,19 +273,22 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     public boolean onTouch(View v, MotionEvent event) {
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                // PRESSED
-                changeText(1); // changes text on top layout.
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-                v.startDrag(data, shadowBuilder, v, 0);
-                dragStarted = true;
-                manager.setEndTimer(false);
-                manager.startTimer();
-                manager.resetScore();
-                draggedOrb = (OrbView) v;
-                draggedOrb.setVisibility(View.INVISIBLE);
-                Log.d(TAG, "Orb ID is " + draggedOrb.getID());
-                return true; // if you want to handle the touch event
+                if(!manager.isGameOver()) {
+                    // PRESSED
+                    changeText(1); // changes text on top layout.
+                    ClipData data = ClipData.newPlainText("", "");
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                    v.startDrag(data, shadowBuilder, v, 0);
+                    dragStarted = true;
+                    timerEnded = false;
+                    manager.setEndTimer(false);
+                    manager.startTimer();
+                    manager.resetScore();
+                    draggedOrb = (OrbView) v;
+                    draggedOrb.setVisibility(View.INVISIBLE);
+                    Log.d(TAG, "Orb ID is " + draggedOrb.getID());
+                    return true; // if you want to handle the touch event
+                }
             case MotionEvent.ACTION_UP:
                 // RELEASED
                 return true; // if you want to handle the touch event

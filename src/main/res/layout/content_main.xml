@@ -45,6 +45,20 @@
             android:layout_gravity="bottom|center_horizontal"
             android:gravity="bottom"
             android:textColor="#ff000a" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textView3"
+            android:gravity="right"
+            android:layout_gravity="right"
+            android:textStyle="bold"
+            android:textColor="#000fff"/>
 
     </LinearLayout>
 
