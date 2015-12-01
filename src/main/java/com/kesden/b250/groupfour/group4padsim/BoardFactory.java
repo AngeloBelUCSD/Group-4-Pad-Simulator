@@ -1,5 +1,6 @@
 package com.kesden.b250.groupfour.group4padsim;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -9,6 +10,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.graphics.Path;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -93,7 +95,7 @@ public class BoardFactory {
 
     private OrbView createOrb(int row, int col) {
 
-        /**/
+
         int calcI = (row * 5) + col;
         OrbView orb = orbList.get(calcI);
         int orbID = rand.nextInt(6);
@@ -113,8 +115,12 @@ public class BoardFactory {
 
 
         /* targetOrb is invisible */
+        /* I do not think we need to create a new orb. */
         OrbView targetOrb = createOrb(row, col);
 
+        /* There is a row of invisible orbs at the top of the screen.
+        *  The invisible orbs will randomly get a color and turn itself visible.
+        *  Then it switches with the target orb (which is invisible). */
         /* topOrb is initially invisible */
         int orbID = rand.nextInt(6);
         OrbView topOrb = orbList.get(30 + col);
@@ -138,37 +144,40 @@ public class BoardFactory {
 
         /* Takes two orbViews. Animating Orb and its target orb (for the cell location) */
 
-        float topX = topOrb.getX();
-        float topY = topOrb.getY();
-        float targetX = targetOrb.getX();
-        float targetY = targetOrb.getY();
+        int[] topOrbCoord= new int[2];
+        topOrb.getLocationOnScreen(topOrbCoord);
+
+        int[] targetOrbCoord = new int[2];
+        targetOrb.getLocationOnScreen(targetOrbCoord);
+
+        //double topX = (double)topOrbCoord[0] + topOrb.getWidth()/2.0;
+        double topY = (double)topOrbCoord[1] + topOrb.getHeight()/2.0;
+        //double targetX = (double)targetOrbCoord[0]  + targetOrb.getWidth()/2.0;
+        double targetY = (double)targetOrbCoord[1]  + targetOrb.getHeight()/2.0;
 
 
-        TranslateAnimation cascade = new TranslateAnimation(topX, targetX, topY, targetY);
-        cascade.setDuration(250);
+        /* Start Animation */
+        ObjectAnimator topOrbAnimator = ObjectAnimator.ofFloat(topOrb,
+                OrbView.TRANSLATION_Y, (int)(-(topY-targetY)));
+        topOrbAnimator.setDuration(300);
+        topOrbAnimator.start();
 
-        TranslateAnimation cascadeBack = new TranslateAnimation(targetX, topX, targetY, topY);
-        cascadeBack.setDuration(1);
+        /* Hidden animation. Invisible orb that has been matched will replace the orb that cascaded
+        * down.
+        * Scenario:
+        *   If existing orb cascaded, then targetOrb will switch with existing Orb, then
+        *   top row (invisible orbs) will replace the targetOrb at the call of cascadeNewOrb(). */
+        ObjectAnimator targetOrbAnimator = ObjectAnimator.ofFloat(targetOrb,
+                OrbView.TRANSLATION_Y, (int)(topY-targetY));
+        targetOrbAnimator.setDuration(10);
+        targetOrbAnimator.start();
 
-
-        topOrb.startAnimation(cascade);
-
-        /* Set invisible and quickly put it back to top row. */
-        topOrb.setVisibility(View.INVISIBLE);
-        topOrb.startAnimation(cascadeBack);
-
-
-        /* Quickly swap after cascade animation
-        *  What swaps is the invisible topOrb that went back to the top row
-        *  and the invisible target orb.*/
-        swapOrbImages(topOrb, targetOrb);
-        targetOrb.setVisibility(View.VISIBLE);
 
     }
 
 
 
-    public void swapOrbImages(OrbView view1, OrbView view2) {
+    /*public void swapOrbImages(OrbView view1, OrbView view2) {
         if (view1 != null && view2 != null) {
             Bitmap swap;
             swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
@@ -180,7 +189,7 @@ public class BoardFactory {
             view2.setID(swapID);
 
         }
-    }
+    }*/
 
 
     public void populateBoard() {
@@ -229,6 +238,48 @@ public class BoardFactory {
 
         }
 
+
+    }
+
+    public void testCascade() {
+        /* FOR TESTING PURPOSES */
+
+        OrbView topOrb = orbList.get(10);
+        OrbView targetOrb = orbList.get(22);
+        //targetOrb.setVisibility(View.INVISIBLE);
+        //cascadeNewOrb(2, 5);
+
+
+        int[] img_coordinates = new int[2];
+        //ImageView image = (ImageView) findViewById(R.id.myImage);
+
+        topOrb.getLocationOnScreen(img_coordinates);
+
+        int[] img_targetCoord = new int[2];
+        targetOrb.getLocationOnScreen(img_targetCoord);
+
+        double topX = (double)img_coordinates[0] + topOrb.getWidth()/2.0;
+        double topY = (double)img_coordinates[1] + topOrb.getHeight()/2.0;
+        double targetX = (double)img_targetCoord[0]  + targetOrb.getWidth()/2.0;
+        double targetY = (double)img_targetCoord[1]  + targetOrb.getHeight()/2.0;
+
+        /*TranslateAnimation testCasc = new TranslateAnimation((float)topX, (float)targetX, (float)topY, (float)targetY);
+
+        testCasc.setDuration(50);
+
+        topOrb.startAnimation(testCasc);*/
+
+        Path path = new Path();
+
+        path.moveTo((float) topX, (float) topY);
+        path.lineTo((float) (targetX + 50 ), (float) (targetY + 50));
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(topOrb, OrbView.TRANSLATION_Y, (int)(-(topY-targetY)));
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(targetOrb, OrbView.TRANSLATION_Y, (int)(topY-targetY));
+        objectAnimator.setDuration(300);
+        objectAnimator.start();
+        objectAnimator1.setDuration(10);
+        objectAnimator1.start();
 
     }
 }
