@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     if (dragStarted) {
-                        matcher.threeSort();
+                        matcher.sort();
                         changeText(2);
                         dragStarted = false;
                     }
