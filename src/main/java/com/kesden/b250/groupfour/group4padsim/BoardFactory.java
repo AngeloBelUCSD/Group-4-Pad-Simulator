@@ -20,6 +20,9 @@ import java.util.Random;
 
 public class BoardFactory {
 
+    public static int NEW_ORB = 1;
+    public static int EXISTING_ORB = 2;
+
     private Random rand;
     public ArrayList<Integer> colorList;
     public ArrayList<OrbView> orbList;
@@ -132,17 +135,17 @@ public class BoardFactory {
         topOrb.setAlpha(1.0f);
 
         /* calls cascadeAnimation to animate from top row to target row */
-        cascadeAnimation(topOrb, targetOrb);
+        cascadeAnimation(topOrb, targetOrb, BoardFactory.NEW_ORB);
 
     }
 
     public void cascadeExistingOrb(OrbView topOrb, OrbView targetOrb) {
 
-        cascadeAnimation(topOrb, targetOrb);
+        cascadeAnimation(topOrb, targetOrb, BoardFactory.EXISTING_ORB);
 
     }
 
-    private void cascadeAnimation(final OrbView topOrb, final OrbView targetOrb) {
+    private void cascadeAnimation(final OrbView topOrb, final OrbView targetOrb, int flag) {
 
         /* Takes two orbViews. Animating Orb and its target orb (for the cell location) */
 
@@ -157,6 +160,10 @@ public class BoardFactory {
         //double targetX = (double)targetOrbCoord[0]  + targetOrb.getWidth()/2.0;
         final double targetY = (double)targetOrbCoord[1]  + targetOrb.getHeight()/2.0;
         final double travelDist = topY - targetY;
+
+        targetOrb.setAlpha(0.5f);
+        topOrb.setAlpha(0.7f);
+
 
         /* Start Animation */
         final ObjectAnimator topOrbAnimator = ObjectAnimator.ofFloat(topOrb,
