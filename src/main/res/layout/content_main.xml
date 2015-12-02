@@ -27,7 +27,7 @@
             android:text="Welcome to PADSIM"
             android:id="@+id/textView2"
             android:gravity="center"
-            android:textColor="#fffaaf"
+            android:textColor="#4b9fb7"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal" />
 
@@ -44,7 +44,7 @@
             android:id="@+id/textView1"
             android:layout_gravity="bottom|center_horizontal"
             android:gravity="bottom"
-            android:textColor="#ff000a" />
+            android:textColor="#53b256" />
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             android:gravity="right"
             android:layout_gravity="right"
             android:textStyle="bold"
-            android:textColor="#000fff"/>
+            android:textColor="#b92b2e"/>
 
     </LinearLayout>
 

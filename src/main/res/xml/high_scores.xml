@@ -2,28 +2,85 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-        android:key="hs1"
+        android:key="@string/hs01"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs02"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs03"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs04"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs05"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs06"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs07"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs08"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs09"
+        android:defaultValue="@integer/hs_default"
+        />
+    <Preference
+        android:key="@string/hs10"
         android:defaultValue="@integer/hs_default"
         />
 
     <Preference
-        android:key="hs2"
-        android:defaultValue="@integer/hs_default"
+        android:key="@string/hsn01"
+        android:defaultValue="@string/hsn_default"
         />
-
     <Preference
-        android:key="hs3"
-        android:defaultValue="@integer/hs_default"
+        android:key="@string/hsn02"
+        android:defaultValue="@string/hsn_default"
         />
-
     <Preference
-        android:key="hs4"
-        android:defaultValue="@integer/hs_default"
+        android:key="@string/hsn03"
+        android:defaultValue="@string/hsn_default"
         />
-
     <Preference
-        android:key="hs5"
-        android:defaultValue="@integer/hs_default"
+        android:key="@string/hsn04"
+        android:defaultValue="@string/hsn_default"
+        />
+    <Preference
+        android:key="@string/hsn05"
+        android:defaultValue="@string/hsn_default"
+        />
+    <Preference
+        android:key="@string/hsn06"
+        android:defaultValue="@string/hsn_default"
+        />
+    <Preference
+        android:key="@string/hsn07"
+        android:defaultValue="@string/hsn_default"
+        />
+    <Preference
+        android:key="@string/hsn08"
+        android:defaultValue="@string/hsn_default"
+        />
+    <Preference
+        android:key="@string/hsn09"
+        android:defaultValue="@string/hsn_default"
+        />
+    <Preference
+        android:key="@string/hsn10"
+        android:defaultValue="@string/hsn_default"
         />
 
 </PreferenceScreen>

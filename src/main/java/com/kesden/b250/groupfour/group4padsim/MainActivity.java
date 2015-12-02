@@ -37,15 +37,18 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private OrbView draggedOrb, enteredOrb;
-    private BoardFactory bFactory;
     private Random rand;
-    private OrbMatcher matcher;
-    private int lScore;
-    private boolean dragStarted;
     private GameManager manager;
-    private boolean timerEnded = false;
+
+    private OrbView draggedOrb, enteredOrb;
+    private OrbMatcher matcher;
+    private BoardFactory bFactory;
+
+    private int lScore;
     private int mode;
+    private boolean dragStarted;
+    private boolean timerEnded = false;
+
     private TextView timeText;
 
     @Override
@@ -53,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         /* Creates activity window */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         /* Gets window size */
         Display d = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -67,8 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
         lScore = 0;
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        mode = Integer.parseInt(sharedPref.getString("game_mode","0"));
+        mode = new SettingsManager(this).getMode();
         manager = new GameManager(matcher, mode);
         timeText = (TextView) findViewById(R.id.textView3);
         manager.startUpdateTimer(0,timeText);
@@ -91,57 +91,22 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
 
     }
 
-
-
     /*
-    Horrible, horrible c/p code. Will figure out how to implement this more elegantly later.
+    When the activity ends, the high score table is updated.
     */
     @Override
     protected void onDestroy(){
         super.onDestroy();
 
-        int newHS = lScore;
+        if(mode == 0) return;
 
-        int[] hs = new int[5];
-        String[] hs_keys = {"hs1", "hs2", "hs3", "hs4", "hs5"};
-        int[] new_hs = new int[5];
+        HighScoreManager HSManager = new HighScoreManager(this);
+        SettingsManager SManager = new SettingsManager(this);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        for(int i = 0; i < 5; i++){
+        String player_name = SManager.getPlayerName();
 
-            hs[i] = sharedPref.getInt(hs_keys[i], 0);
-
-        }
-        if(newHS < hs[4]) return;
-
-        int replace = -1;
-        for(int i = 0; i < 5; i++){
-            if(hs[i] > newHS) new_hs[i] = hs[i];
-            if(hs[i] <= newHS){
-                if(replace == -1){
-
-                    replace = hs[i];
-                    new_hs[i] = newHS;
-
-                }else{
-
-                    new_hs[i] = replace;
-                    replace = hs[i];
-
-                }
-            }
-        }
-
-        SharedPreferences.Editor editor = sharedPref.edit();
-        for(int i = 0; i < 5; i++) {
-
-            editor.putInt(hs_keys[i], new_hs[i]);
-        }
-        editor.commit();
+        HSManager.updateHighScores(player_name, lScore);
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

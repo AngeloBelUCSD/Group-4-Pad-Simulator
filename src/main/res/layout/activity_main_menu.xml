@@ -7,13 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.kesden.b250.groupfour.group4padsim.MainMenu">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-    </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/content_main_menu" />
 
 </android.support.design.widget.CoordinatorLayout>
