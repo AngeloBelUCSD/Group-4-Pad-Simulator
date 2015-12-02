@@ -15,8 +15,9 @@ import static java.util.Arrays.*;
 
 
 public class OrbMatcher {
-    public int total;
     public int[] threeList;
+    public int[] comboSize;
+
     private BoardFactory factory;
     private Random rand;
     private ArrayList<ArrayList<Integer>> comboList;
@@ -49,6 +50,7 @@ public class OrbMatcher {
         comboList.add(4, blueCombo);
         comboList.add(5, greenCombo);
 
+        comboSize = new int[6];
     }
 
 
@@ -139,7 +141,6 @@ public class OrbMatcher {
 
     public void sort()
     {
-
         threeSort();
         comboCheck(threeList);
 
@@ -150,6 +151,7 @@ public class OrbMatcher {
               + result[2]+" light orb: "+result[3]+" blue orb: "+result[4]+" green orb: "
                 + result[5]);
     }
+
     public void comboCheck(int[] threeList)
     {
         for(int i = 0; i<threeList.length;i++)
@@ -185,7 +187,6 @@ public class OrbMatcher {
     }
     public int[] comboSize()
     {
-        int[] comboSize = new int[6];
         for(int i = 0; i<comboSize.length;i++){
             comboSize[i] = comboList.get(i).size();
             if(comboSize[i]==2) comboSize[i]=3;

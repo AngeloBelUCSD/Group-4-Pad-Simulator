@@ -3,6 +3,7 @@ package com.kesden.b250.groupfour.group4padsim;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -16,6 +17,7 @@ public class GameManager {
     private boolean gameOver;
     private int timeRemaining;
     private int mode;
+    private int score;
 
     public GameManager(OrbMatcher inputMatcher, int inputMode){
         matcher = inputMatcher;
@@ -25,11 +27,51 @@ public class GameManager {
     }
 
     public int getScore(){
-        return matcher.total;
+
+        int totalSize = totalOrbs();
+
+        score = totalSize * 100;
+        if(totalSize > 10 && totalSize <= 15){
+
+            score = (int) (score * 1.2);
+        }else if(totalSize > 15 && totalSize <= 20){
+
+            score = (int) (score * 1.4);
+        }else if(totalSize > 20 && totalSize <= 25){
+
+            score = (int) (score * 1.7);
+        }else if(totalSize > 25){
+
+            score = (int) (score * 2.1);
+        }
+
+        Log.d("GameManager", "This round score: " + score);
+
+        return score;
+    }
+
+    public int totalOrbs(){
+
+        int totalSize = 0;
+
+        int[] comboList = matcher.comboSize;
+
+        for (int size:comboList){
+
+            totalSize += size;
+        }
+
+        Log.d("GameManager", "Red orb: "+comboList[0]+" Dark orb: "+comboList[1]+" Heal orb: "
+                + comboList[2]+" light orb: "+comboList[3]+" blue orb: "+comboList[4]+" green orb: "
+                + comboList[5]);
+
+        return totalSize;
     }
 
     public void resetScore(){
-        matcher.total = 0;
+        for(int i:matcher.comboSize){
+            i = 0;
+        }
     }
 
     public void startTimer(){
