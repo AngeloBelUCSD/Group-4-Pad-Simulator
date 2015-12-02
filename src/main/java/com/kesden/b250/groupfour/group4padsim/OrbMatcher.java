@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -23,7 +24,9 @@ public class OrbMatcher {
     private BoardFactory factory;
     private Random rand;
     private ArrayList<ArrayList<Integer>> comboList;
+    private ArrayList<ArrayList<Integer>> comboListV;
     private ArrayList<Integer> redCombo, darkCombo, healCombo,lightCombo, blueCombo, greenCombo;
+    private ArrayList<Integer> redComboV, darkComboV, healComboV,lightComboV, blueComboV, greenComboV;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -52,9 +55,48 @@ public class OrbMatcher {
         comboList.add(4, blueCombo);
         comboList.add(5, greenCombo);
 
+        comboListV = new ArrayList<ArrayList<Integer>>();
+        redComboV = new ArrayList<Integer>();
+        darkComboV = new ArrayList<Integer>();
+        healComboV = new ArrayList<Integer>();
+        lightComboV = new ArrayList<Integer>();
+        blueComboV = new ArrayList<Integer>();
+        greenComboV = new ArrayList<Integer>();
+        comboListV.add(0, redComboV);
+        comboListV.add(1, darkComboV);
+        comboListV.add(2, healComboV);
+        comboListV.add(3, lightComboV);
+        comboListV.add(4, blueComboV);
+        comboListV.add(5, greenComboV);
+
         comboSize = new int[6];
     }
 
+    public void sort()
+    {
+        threeSort();
+        comboCheck(threeList);
+
+        int[] result = comboSize();
+        replaceOrbs();
+        resetLists();
+
+        /*threeSort();
+        comboCheck(threeList);
+        int[] check2 = comboSize();
+        Log.d(TAG,"Combo 1 size is: " + (result[0]+result[1]+result[2]+result[3]+result[4]+result[5])
+        + "\n" + "Combo 2 size is: " + (check2[0]+check2[1]+check2[2]+check2[3]+check2[4]+check2[5]));
+        while(!check2.equals(result))
+        {
+            result = check2;
+            resetLists();
+            threeSort();
+            comboCheck(threeList);
+            replaceOrbs();
+            check2 = comboSize();
+        }*/
+
+    }
 
     //function to sort out combos
     public void threeSort(){
@@ -115,6 +157,7 @@ public class OrbMatcher {
                         }
                         for (int x = i - 12; x < curr + 1; x += 6) {
                             threeList[x] = type;
+                            comboListV.get(type).add(x);
                         }
                         /* same reason as above
                         while (curr - 18 - add >= 0) {
@@ -137,34 +180,6 @@ public class OrbMatcher {
         }
     }
 
-
-    ///////////////////////////TEST CODE/////////////////////////////
-
-
-    public void sort()
-    {
-        threeSort();
-        comboCheck(threeList);
-
-        int[] result = comboSize();
-        replaceOrbs();
-        resetLists();
-        /*
-        threeSort();
-        comboCheck(threeList);
-
-        int[] result2 = comboSize();
-        replaceOrbs();
-        resetLists();*/
-
-
-        Log.d(TAG, "Red orb: "+result[0]+" Dark orb: "+result[1]+" Heal orb: "
-              + result[2]+" light orb: "+result[3]+" blue orb: "+result[4]+" green orb: "
-                + result[5]);
-        /*Log.d(TAG, "Cascading combo:" + "Red orb: "+result2[0]+" Dark orb: "+result2[1]+" Heal orb: "
-                + result2[2]+" light orb: "+result2[3]+" blue orb: "+result2[4]+" green orb: "
-                + result2[5]);*/
-    }
 
     public void comboCheck(int[] threeList)
     {
@@ -207,25 +222,68 @@ public class OrbMatcher {
         int test = 0;
         for(ArrayList<Integer> x:comboList)
         {
-
             if(!x.isEmpty())
             {
-                Log.d(TAG, "Combo for type " + test + " is size " + x.size());
+                ArrayList<Integer> xV = comboListV.get(test);
+                Collections.sort(x);
+                for(int i = 0; i<x.size();i++)
+                {
+                    int location = x.get(i);
+                    if(!xV.isEmpty())
+                    {
+                        for(int y = 0; y<xV.size();y++)
+                        {
+                            int verticalLocation = xV.get(y);
+                            if(location==verticalLocation)
+                            {
+                                if(i<x.size()) {
+                                    x.remove(i);
+                                }
+                            }
+                        }
+                    }
+                }
+                //horizontal animation
                 for(int location:x)
                 {
                     int id = test;
                     int curr = location;
                     int top = curr;
+                    OrbView matchedOrb = factory.orbList.get(curr);
+                    matchedOrb.setAlpha(0.0f);
                     while(top-6>=0)
                     {
                         top = top-6;
                         OrbView newOrb = factory.orbList.get(curr);
                         OrbView topOrb = factory.orbList.get(top);
-                        newOrb.setVisibility(View.VISIBLE);
                         factory.cascadeExistingOrb(topOrb, newOrb);
                         curr = curr-6;
                     }
                     factory.cascadeNewOrb(0,top);
+                }
+                //vertical animation
+                if(!xV.isEmpty()) {
+                    Collections.sort(xV);
+                    Log.d(TAG, "vertical combo start at "+xV.get(0));
+                    for(int i:xV)
+                    {
+                        OrbView tmp = factory.orbList.get(i);
+                        tmp.setAlpha(0.0f);
+                    }
+                    int highest = xV.get(0);
+                    int lowest = xV.get(xV.size() - 1);
+                    while (highest - 6 >= 0) {
+                        highest = highest - 6;
+                        OrbView topOrb = factory.orbList.get(highest);
+                        OrbView target = factory.orbList.get(lowest);
+                        factory.cascadeExistingOrb(topOrb, target);
+                        lowest = lowest - 6;
+                    }
+                    while (lowest-6 >= 0) {
+                        factory.cascadeNewOrb((int) lowest / 6, lowest % 6);
+                        lowest = lowest-6;
+                    }
+                    factory.cascadeNewOrb(0,lowest);
                 }
             }
             test++;
@@ -241,12 +299,5 @@ public class OrbMatcher {
         }
     }
 
-    public void cascadeComboCheck()
-    {
-        threeSort();
-        comboCheck(threeList);
-        replaceOrbs();
-        resetLists();
-    }
 
 }
