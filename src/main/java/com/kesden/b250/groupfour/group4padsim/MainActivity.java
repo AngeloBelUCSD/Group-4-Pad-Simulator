@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 scoreText.setText("Current Score: " + Integer.toString(lScore));
 
                 if (turnScore > 0)
-                    motiText.setText("Matched " + turnScore / 100 + " Orbs!");
+                    motiText.setText("Matched " + manager.totalOrbs() + " Orbs!");
                 break;
 
             default:
@@ -254,9 +254,15 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     draggedOrb.setVisibility(View.INVISIBLE);
                     Log.d(TAG, "Orb ID is " + draggedOrb.getID());
                     return true; // if you want to handle the touch event
+                } else {
+                    finish();
                 }
             case MotionEvent.ACTION_UP:
                 // RELEASED
+                if (manager.isGameOver())
+                {
+                    finish();
+                }
                 return true; // if you want to handle the touch event
         }
         return false;
