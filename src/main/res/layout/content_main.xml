@@ -48,17 +48,7 @@
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/textView4"
-            android:gravity="left"
-            android:layout_gravity="left"
-            android:textStyle="bold"
-            android:textColor="#b92bff"/>
+            android:layout_weight="0.2"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,18 +60,29 @@
             android:textStyle="bold"
             android:textColor="#b92b2e"/>
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"/>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar" />
+
     </LinearLayout>
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="280dp"
+        android:layout_height="310dp"
         android:scaleType="fitXY"
         android:src="@drawable/gridbg"
         android:layout_alignParentBottom="true"/>
 
     <GridLayout
         android:layout_width="fill_parent"
-        android:layout_height="380dp"
+        android:layout_height="370dp"
 
         android:useDefaultMargins="false"
         android:alignmentMode="alignMargins"

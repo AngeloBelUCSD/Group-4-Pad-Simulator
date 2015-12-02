@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -13,19 +14,20 @@ public class GameManager {
     private OrbMatcher matcher;
     private CountDownTimer dragTimer;
     private CountDownTimer finalTimer;
+    private ProgressBar pBar;
     private boolean endTimer = false;
     private boolean gameOver;
     private int timeRemaining;
+    private int timeAccumulated;
     private int mode;
     private int score;
-    private int dragTimeRemaining;
 
-    public GameManager(OrbMatcher inputMatcher, int inputMode){
+    public GameManager(OrbMatcher inputMatcher, int inputMode, ProgressBar progressBar){
         matcher = inputMatcher;
         mode = inputMode;
         gameOver = false;
-        timeRemaining = 60;
-        dragTimeRemaining = 5;
+        pBar = progressBar;
+
     }
 
     public int getScore(){
@@ -72,21 +74,20 @@ public class GameManager {
         }
     }
 
-    public void startTimer(final TextView dragTime){
+    public void startTimer(){
         endTimer = false;
-        dragTimeRemaining = 5;
+
         if(dragTimer != null)
             dragTimer.cancel();
-        dragTimer = new CountDownTimer(5000, 1000) {
+
+        dragTimer = new CountDownTimer(5000, 50) {
             @Override
             public void onTick(long millisUntilFinished) {
-                dragTime.setText("Drag: " + dragTimeRemaining);
-                dragTimeRemaining--;
+                pBar.setProgress(pBar.getProgress()+1);
             }
 
             @Override
             public void onFinish() {
-                dragTime.setText("");
                 endTimer = true;
             }
         }.start();
@@ -100,37 +101,49 @@ public class GameManager {
         endTimer = setTimerTo;
     }
 
-    public void startUpdateTimer(int time, final TextView timeText){
-        if(finalTimer != null)
-            finalTimer.cancel();
+    public void startGlobalTimer(int time, final TextView timeText) {
+
+
         if(mode == 0){
             timeText.setText("Endless");
         }
         else{
+            timeAccumulated = 0;
+            timeText.setText("Time:" + time);
             timeRemaining += time;
-            timeText.setText("Time:" + timeRemaining);
-            finalTimer = new CountDownTimer((timeRemaining+1)*1000, 1000){
+
+            finalTimer = new CountDownTimer(timeRemaining*1000, 1000){
                 @Override
                 public void onTick(long millisUntilFinished) {
                     timeRemaining--;
-                    timeText.setText("Time:" + timeRemaining);
+                    timeText.setText("Time:" + (timeRemaining+timeAccumulated));
                 }
 
                 @Override
                 public void onFinish() {
-                    timeText.setText("Game Over!");
-                    gameOver = true;
+                    timeRemaining = 0;
+                    if (timeAccumulated > 0) {
+                        startGlobalTimer(timeAccumulated, timeText);
+                    } else {
+                        timeText.setText("Game Over!");
+                        gameOver = true;
+                    }
                 }
             }.start();
         }
+    }
+
+    public void updateGlobalTimer(int time){
+        timeAccumulated += time;
+    }
+
+    public void stopDragTimer() {
+        if (dragTimer != null)
+            dragTimer.cancel();
     }
 
     public boolean isGameOver(){
         return gameOver;
     }
 
-    public void cancelTimer(){
-        if(dragTimer != null)
-            dragTimer.cancel();
-    }
 }

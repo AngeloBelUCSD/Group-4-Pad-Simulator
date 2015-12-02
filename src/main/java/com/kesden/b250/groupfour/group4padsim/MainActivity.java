@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private OrbView draggedOrb, enteredOrb;
     private OrbMatcher matcher;
     private BoardFactory bFactory;
+    private ProgressBar pBar;
 
     private int lScore;
     private int mode;
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private boolean timerEnded = false;
 
     private TextView timeText;
-    private TextView dragText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +72,12 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
+        pBar = (ProgressBar)findViewById(R.id.progressBar);
         lScore = 0;
         mode = new SettingsManager(this).getMode();
-        manager = new GameManager(matcher, mode);
+        manager = new GameManager(matcher, mode, pBar);
         timeText = (TextView) findViewById(R.id.textView3);
-        dragText = (TextView) findViewById(R.id.textView4);
-        manager.startUpdateTimer(0,timeText);
+        manager.startGlobalTimer(10,timeText);
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
@@ -183,10 +184,11 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             draggedOrb = null;
             matcher.sort();
             changeText(2);
-            manager.startUpdateTimer(1+manager.totalOrbs(), timeText);
+            manager.updateGlobalTimer(manager.totalOrbs());
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
+            pBar.setProgress(0);
         }
         else if(timerEnded){
             if(action == DragEvent.ACTION_DRAG_ENDED)
@@ -227,10 +229,14 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
-                        manager.startUpdateTimer(1+manager.totalOrbs(), timeText);
+
+                        manager.updateGlobalTimer(manager.totalOrbs());
+
+                        // Reset progress bar on drag end
+                        manager.stopDragTimer();
+                        pBar.setProgress(0);
+
                         dragStarted = false;
-                        manager.cancelTimer();
-                        dragText.setText("");
                     }
                     // Handle End
                 default:
@@ -254,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     dragStarted = true;
                     timerEnded = false;
                     manager.setEndTimer(false);
-                    manager.startTimer(dragText);
+                    manager.startTimer();
                     manager.resetScore();
                     draggedOrb = (OrbView) v;
                     draggedOrb.setVisibility(View.INVISIBLE);
@@ -264,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     finish();
                 }
             case MotionEvent.ACTION_UP:
-                dragText.setText("");
                 if (manager.isGameOver())
                 {
                     finish();
