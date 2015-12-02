@@ -25,15 +25,16 @@ public class OrbMatcher {
     private Random rand;
     private ArrayList<ArrayList<Integer>> comboList;
     private ArrayList<ArrayList<Integer>> comboListV;
-    private ArrayList<Integer> redCombo, darkCombo, healCombo,lightCombo, blueCombo, greenCombo;
-    private ArrayList<Integer> redComboV, darkComboV, healComboV,lightComboV, blueComboV, greenComboV;
+    private ArrayList<Integer> redCombo, darkCombo, healCombo, lightCombo, blueCombo, greenCombo;
+    private ArrayList<Integer> redComboV, darkComboV, healComboV, lightComboV, blueComboV, greenComboV;
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private boolean done;
 
     MainActivity activity;
 
     //Constructor takes in a BoardFactory object
-    public OrbMatcher(BoardFactory bFactory){
+    public OrbMatcher(BoardFactory bFactory) {
         rand = new Random();
         this.factory = bFactory;
         threeList = new int[30];
@@ -70,10 +71,10 @@ public class OrbMatcher {
         comboListV.add(5, greenComboV);
 
         comboSize = new int[6];
+        done = false;
     }
 
-    public void sort()
-    {
+    public void sort() {
         threeSort();
         comboCheck(threeList);
 
@@ -84,8 +85,15 @@ public class OrbMatcher {
         Log.d(TAG, "Red orb: " + result[0] + " Dark orb: " + result[1] + " Heal orb: "
                 + result[2] + " light orb: " + result[3] + " blue orb: " + result[4] + " green orb: "
                 + result[5]);
+        done = true;
 
     }
+
+    public boolean sortFinished()
+    {
+        return done;
+    }
+
 
     //function to sort out combos
     public void threeSort(){
