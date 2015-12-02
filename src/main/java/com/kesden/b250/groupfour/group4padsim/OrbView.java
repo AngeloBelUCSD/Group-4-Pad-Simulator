@@ -3,7 +3,6 @@ package com.kesden.b250.groupfour.group4padsim;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -51,41 +50,23 @@ public class OrbView extends ImageView{
         // TODO Auto-generated constructor stub
     }
 
-    public void swapImages(OrbView orb){
-        if(orb != null){
-
-            Bitmap swap;
-            swap = ((BitmapDrawable) getDrawable()).getBitmap();
-            setImage(((BitmapDrawable) orb.getDrawable()).getBitmap());
-            orb.setImage(swap);
-
-            int swapID = getID();
-            setID(orb.getID());
-            orb.setID(swapID);
-        }
-    }
-
     public void setID(int id)
     {
-
         this.id = id;
     }
 
     public int getID()
     {
-
         return id;
     }
 
     public void setImage(Bitmap bitmap)
     {
-
         setImageBitmap(bitmap);
     }
 
     public void setOrb(Bitmap bitmap, int id)
     {
-
         setID(id);
         setImage(bitmap);
     }
