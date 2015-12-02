@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private boolean timerEnded = false;
 
     private TextView timeText;
+    private TextView dragText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         mode = new SettingsManager(this).getMode();
         manager = new GameManager(matcher, mode);
         timeText = (TextView) findViewById(R.id.textView3);
+        dragText = (TextView) findViewById(R.id.textView4);
         manager.startUpdateTimer(0,timeText);
 
         /* Populate board and set listeners */
@@ -176,9 +178,9 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 draggedOrb.setVisibility(View.VISIBLE);
             enteredOrb = null;
             draggedOrb = null;
-            matcher.threeSort();
+            matcher.sort();
             changeText(2);
-            manager.startUpdateTimer(manager.getScore() / 100, timeText);
+            manager.startUpdateTimer(1+manager.totalOrbs(), timeText);
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
@@ -222,10 +224,11 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
-                        manager.startUpdateTimer(manager.getScore() / 100, timeText);
+                        manager.startUpdateTimer(1+manager.totalOrbs(), timeText);
                         dragStarted = false;
+                        manager.cancelTimer();
+                        dragText.setText("");
                     }
-
                     // Handle End
                 default:
                     break;
@@ -248,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     dragStarted = true;
                     timerEnded = false;
                     manager.setEndTimer(false);
-                    manager.startTimer();
+                    manager.startTimer(dragText);
                     manager.resetScore();
                     draggedOrb = (OrbView) v;
                     draggedOrb.setVisibility(View.INVISIBLE);
@@ -258,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     finish();
                 }
             case MotionEvent.ACTION_UP:
-                // RELEASED
+                dragText.setText("");
                 if (manager.isGameOver())
                 {
                     finish();
