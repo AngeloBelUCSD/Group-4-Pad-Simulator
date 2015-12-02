@@ -98,7 +98,7 @@ public class BoardFactory {
     private OrbView createOrb(int row, int col) {
 
 
-        int calcI = (row * 5) + col;
+        int calcI = (row * 6) + col;
         OrbView orb = orbList.get(calcI);
         int orbID = rand.nextInt(6);
 
