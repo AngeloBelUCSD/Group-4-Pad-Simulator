@@ -19,15 +19,41 @@ public class GameManager {
     private boolean gameOver;
     private int timeRemaining;
     private int timeAccumulated;
+
+    private float time_mod;
+    private float score_mod;
+    private int difficulty;
     private int mode;
     private int score;
 
-    public GameManager(OrbMatcher inputMatcher, int inputMode, ProgressBar progressBar){
+    public GameManager(OrbMatcher inputMatcher, int inputDifficulty, int inputMode, ProgressBar progressBar){
         matcher = inputMatcher;
         mode = inputMode;
+        difficulty = inputDifficulty;
         gameOver = false;
         pBar = progressBar;
 
+        if(mode == 0) difficulty = -1;
+
+        //Values that adjust time extensions/score modifiers depending on difficulty in time attack
+        switch (difficulty){
+            case 0: time_mod = (float) 3;
+                    score_mod = 1;
+                    break;
+
+            case 1: time_mod = (float) 6.5;
+                    score_mod = 2;
+                    break;
+
+            case 2: time_mod = (float) 9;
+                    score_mod = 5;
+                    break;
+
+            case -1:
+            default: time_mod = 1;
+                     score_mod = 1;
+                     break;
+        }
     }
 
     public int getScore(){
@@ -35,23 +61,49 @@ public class GameManager {
         int totalSize = totalOrbs();
 
         score = totalSize * 100;
-        if(totalSize > 10 && totalSize <= 15){
+        if(totalSize > 5 && totalSize <= 10){
 
             score = (int) (score * 1.2);
+        }else if(totalSize > 10 && totalSize <= 15){
+
+            score = (int) (score * 1.75);
         }else if(totalSize > 15 && totalSize <= 20){
 
-            score = (int) (score * 1.4);
-        }else if(totalSize > 20 && totalSize <= 25){
+            score = (int) (score * 2.5);
+        }else if(totalSize > 20){
 
-            score = (int) (score * 1.7);
-        }else if(totalSize > 25){
-
-            score = (int) (score * 2.1);
+            score = (int) (score * 4.5);
         }
+
+        score = (int) (score * score_mod);
 
         Log.d("GameManager", "This round score: " + score);
 
         return score;
+    }
+
+    public int time_bonus(){
+
+        //Bonus time depending on orbs cleared.
+        int totalOrbs = totalOrbs();
+        int time_bonus = 0;
+
+        if(totalOrbs >= 5){
+            time_bonus += 1;
+        }
+        if(totalOrbs >= 10){
+            time_bonus += 2;
+        }
+        if(totalOrbs >= 15){
+            time_bonus += 3;
+        }
+
+        if(difficulty == 2){
+
+            time_bonus = (int) Math.round(time_bonus/1.5);
+        }
+
+        return time_bonus;
     }
 
     public int totalOrbs(){
@@ -69,8 +121,8 @@ public class GameManager {
     }
 
     public void resetScore(){
-        for(int i:matcher.comboSize) {
-            i = 0;
+        for(int i = 0; i < matcher.comboSize.length; i++) {
+            matcher.comboSize[i] = 0;
         }
     }
 
@@ -103,6 +155,7 @@ public class GameManager {
 
     public void startGlobalTimer(int time, final TextView timeText) {
 
+        time += (int) Math.ceil(time_mod);
 
         if(mode == 0){
             timeText.setText("Endless");
@@ -134,7 +187,13 @@ public class GameManager {
     }
 
     public void updateGlobalTimer(int time){
-        timeAccumulated += time;
+
+        int time_add = Math.round(time/time_mod) + time_bonus();
+        time_add = (time_add < 0) ? 0 : time_add;
+
+        Log.d("GameManager", "Time added: " + time/time_mod + " + " +time_bonus() + " = " + time_add);
+
+        timeAccumulated += time_add;
     }
 
     public void stopDragTimer() {

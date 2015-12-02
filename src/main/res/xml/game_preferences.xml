@@ -12,21 +12,22 @@
         />
 
     <ListPreference
-        android:key="difficulty"
-        android:title="@string/difficulty_title"
-        android:summary=""
-        android:entries="@array/difficulty_entries"
-        android:entryValues="@array/difficulty_values"
-        android:defaultValue="@string/list_def"
-        android:positiveButtonText="@null"
-        android:negativeButtonText="@null"/>
-
-    <ListPreference
         android:key="game_mode"
         android:title="@string/mode_title"
         android:summary=""
         android:entries="@array/mode_entries"
         android:entryValues="@array/mode_values"
+        android:defaultValue="@string/list_def"
+        android:positiveButtonText="@null"
+        android:negativeButtonText="@null"/>
+
+    <ListPreference
+        android:key="difficulty"
+        android:title="@string/difficulty_title"
+        android:summary=""
+        android:dependency="game_mode"
+        android:entries="@array/difficulty_entries"
+        android:entryValues="@array/difficulty_values"
         android:defaultValue="@string/list_def"
         android:positiveButtonText="@null"
         android:negativeButtonText="@null"/>

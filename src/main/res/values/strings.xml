@@ -7,7 +7,7 @@
 
     <!-- Setting strings go here. -->
 
-    <string name="difficulty_title">Difficulty</string>
+    <string name="difficulty_title">Difficulty (Time Attack)</string>
     <string-array name="difficulty_entries">
         <item>Easy</item>
         <item>Medium</item>

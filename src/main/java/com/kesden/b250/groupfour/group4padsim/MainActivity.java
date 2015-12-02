@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private ProgressBar pBar;
 
     private int lScore;
+    private int difficulty;
     private int mode;
     private boolean dragStarted;
     private boolean timerEnded = false;
@@ -71,10 +72,12 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         matcher = new OrbMatcher(bFactory);
         pBar = (ProgressBar)findViewById(R.id.progressBar);
         lScore = 0;
-        mode = new SettingsManager(this).getMode();
-        manager = new GameManager(matcher, mode, pBar);
+        SettingsManager settings = new SettingsManager(this);
+        mode = settings.getMode();
+        difficulty = settings.getDifficulty();
+        manager = new GameManager(matcher, difficulty, mode, pBar);
         timeText = (TextView) findViewById(R.id.textView3);
-        manager.startGlobalTimer(10,timeText);
+        manager.startGlobalTimer(10, timeText);
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
