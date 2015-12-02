@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -13,17 +14,19 @@ public class GameManager {
     private OrbMatcher matcher;
     private CountDownTimer dragTimer;
     private CountDownTimer finalTimer;
+    private ProgressBar pBar;
     private boolean endTimer = false;
     private boolean gameOver;
     private int timeRemaining;
     private int mode;
     private int score;
 
-    public GameManager(OrbMatcher inputMatcher, int inputMode){
+    public GameManager(OrbMatcher inputMatcher, int inputMode, ProgressBar progressBar){
         matcher = inputMatcher;
         mode = inputMode;
         gameOver = false;
         timeRemaining = 60;
+        pBar = progressBar;
     }
 
     public int getScore(){
@@ -72,12 +75,13 @@ public class GameManager {
 
     public void startTimer(){
         endTimer = false;
-        if(dragTimer != null)
+        if(dragTimer != null) {
             dragTimer.cancel();
-        dragTimer = new CountDownTimer(5000, 1000) {
+        }
+        dragTimer = new CountDownTimer(5000, 50) {
             @Override
             public void onTick(long millisUntilFinished) {
-
+                pBar.setProgress(pBar.getProgress()+1);
             }
 
             @Override
@@ -118,6 +122,11 @@ public class GameManager {
                 }
             }.start();
         }
+    }
+
+    public void stopDragTimer() {
+        if (dragTimer != null)
+            dragTimer.cancel();
     }
 
     public boolean isGameOver(){

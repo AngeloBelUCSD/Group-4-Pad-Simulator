@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private OrbView draggedOrb, enteredOrb;
     private OrbMatcher matcher;
     private BoardFactory bFactory;
+    private ProgressBar pBar;
 
     private int lScore;
     private int mode;
@@ -67,9 +69,10 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         enteredOrb = null;
         bFactory = new BoardFactory(30, this, p);
         matcher = new OrbMatcher(bFactory);
+        pBar = (ProgressBar)findViewById(R.id.progressBar);
         lScore = 0;
         mode = new SettingsManager(this).getMode();
-        manager = new GameManager(matcher, mode);
+        manager = new GameManager(matcher, mode, pBar);
         timeText = (TextView) findViewById(R.id.textView3);
         manager.startUpdateTimer(0,timeText);
 
@@ -182,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
+            pBar.setProgress(0);
         }
         else if(timerEnded){
             if(action == DragEvent.ACTION_DRAG_ENDED)
@@ -222,7 +226,12 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
-                        manager.startUpdateTimer(manager.getScore()/100, timeText);
+                        manager.startUpdateTimer(manager.getScore()/100, timeText); // looks like the cause of tapping-to-remove-time bug
+
+                        // Reset progress bar on drag end
+                        manager.stopDragTimer();
+                        pBar.setProgress(0);
+
                         dragStarted = false;
                     }
                     // Handle End
