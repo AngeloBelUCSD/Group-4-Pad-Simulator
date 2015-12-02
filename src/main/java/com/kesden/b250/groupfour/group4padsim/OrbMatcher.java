@@ -214,10 +214,10 @@ public class OrbMatcher {
                     }
                 }
                 //horizontal animation
+                Log.d(TAG, "horizontal combo size: " + x.size());
                 for(int location:x)
                 {
                     if(x.size()>=2) {
-                        Log.d(TAG, "horizontal combo size: " + x.size());
                         int id = test;
                         int curr = location;
                         int top = curr;
@@ -268,7 +268,6 @@ public class OrbMatcher {
     public void resetLists()
     {
         threeList = new int[30];
-        comboSize = new int[6];
         fill(threeList, -1);
         for(ArrayList<Integer> x:comboList) {
             x.clear();
