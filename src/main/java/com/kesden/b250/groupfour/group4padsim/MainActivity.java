@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             draggedOrb = null;
             matcher.threeSort();
             changeText(2);
-            manager.startUpdateTimer(manager.getScore()/100, timeText);
+            manager.startUpdateTimer(manager.getScore() / 100, timeText);
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
@@ -222,9 +222,10 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
-                        manager.startUpdateTimer(manager.getScore()/100, timeText);
+                        manager.startUpdateTimer(manager.getScore() / 100, timeText);
                         dragStarted = false;
                     }
+
                     // Handle End
                 default:
                     break;

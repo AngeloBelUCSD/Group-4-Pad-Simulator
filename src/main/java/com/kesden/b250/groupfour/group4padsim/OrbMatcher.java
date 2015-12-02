@@ -148,9 +148,21 @@ public class OrbMatcher {
         int[] result = comboSize();
         replaceOrbs();
         resetLists();
+        /*
+        threeSort();
+        comboCheck(threeList);
+
+        int[] result2 = comboSize();
+        replaceOrbs();
+        resetLists();*/
+
+
         Log.d(TAG, "Red orb: "+result[0]+" Dark orb: "+result[1]+" Heal orb: "
               + result[2]+" light orb: "+result[3]+" blue orb: "+result[4]+" green orb: "
                 + result[5]);
+        /*Log.d(TAG, "Cascading combo:" + "Red orb: "+result2[0]+" Dark orb: "+result2[1]+" Heal orb: "
+                + result2[2]+" light orb: "+result2[3]+" blue orb: "+result2[4]+" green orb: "
+                + result2[5]);*/
     }
 
     public void comboCheck(int[] threeList)
@@ -223,10 +235,17 @@ public class OrbMatcher {
     {
         threeList = new int[30];
         fill(threeList, -1);
-        for(ArrayList<Integer> x:comboList)
-        {
+        for(ArrayList<Integer> x:comboList) {
             x.clear();
         }
+    }
+
+    public void cascadeComboCheck()
+    {
+        threeSort();
+        comboCheck(threeList);
+        replaceOrbs();
+        resetLists();
     }
 
 }
