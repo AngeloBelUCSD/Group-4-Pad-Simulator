@@ -64,7 +64,7 @@
 
     <GridLayout
         android:layout_width="fill_parent"
-        android:layout_height="380dp"
+        android:layout_height="370dp"
 
         android:useDefaultMargins="false"
         android:alignmentMode="alignMargins"
