@@ -268,7 +268,6 @@ public class OrbMatcher {
     public void resetLists()
     {
         threeList = new int[30];
-        comboSize = new int[6];
         fill(threeList, -1);
         for(ArrayList<Integer> x:comboList) {
             x.clear();
