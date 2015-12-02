@@ -208,10 +208,14 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                         if (enteredOrb != null) {
                             draggedOrb = enteredOrb;
                         }
+                        
+                        if (draggedOrb != null){
+                            
+                           draggedOrb.swapImages(enteredOrb);
+                           draggedOrb.setVisibility(View.VISIBLE);
+                        }
 
                         enteredOrb = (OrbView) v;
-                        draggedOrb.swapImages(enteredOrb);
-                        draggedOrb.setVisibility(View.VISIBLE);
                         enteredOrb.setVisibility(View.INVISIBLE);
                     }
                     break;
