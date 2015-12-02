@@ -4,13 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:background="@drawable/blackstarbg"
     android:id="@+id/main_layout">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/grid"
-        android:background="@drawable/blackstarbg"
         android:id="@+id/linear_layout"
         android:orientation="vertical"
         android:weightSum="1">
@@ -62,6 +62,13 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="280dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/gridbg"
+        android:layout_alignParentBottom="true"/>
+
     <GridLayout
         android:layout_width="fill_parent"
         android:layout_height="380dp"
@@ -77,7 +84,7 @@
         android:layout_alignParentBottom="true"
 
         android:id="@+id/grid"
-        android:background="@drawable/gridbg"
+        android:background="@null"
 
 
         >
