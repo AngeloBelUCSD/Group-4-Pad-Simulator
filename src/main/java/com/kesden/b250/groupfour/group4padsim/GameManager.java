@@ -155,7 +155,7 @@ public class GameManager {
 
     public void startGlobalTimer(int time, final TextView timeText) {
 
-        time += (int) Math.ceil(time_mod);
+        //time += (int) Math.ceil(time_mod);
 
         if(mode == 0){
             timeText.setText("Endless");

@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
     private int mode;
     private boolean dragStarted;
     private boolean timerEnded = false;
+    private boolean dialogDisplayed = false;
 
     private TextView timeText;
 
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         /* instantiate instance variables */
         draggedOrb = null;
         enteredOrb = null;
-        bFactory = new BoardFactory(30, this, p);
+        bFactory = new BoardFactory(10, this, p);
         matcher = new OrbMatcher(bFactory);
         pBar = (ProgressBar)findViewById(R.id.progressBar);
         lScore = 0;
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         difficulty = settings.getDifficulty();
         manager = new GameManager(matcher, difficulty, mode, pBar);
         timeText = (TextView) findViewById(R.id.textView3);
-        manager.startGlobalTimer(10, timeText);
+        manager.startGlobalTimer(30, timeText);
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
@@ -186,12 +189,21 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             enteredOrb = null;
             draggedOrb = null;
             matcher.sort();
-            changeText(2);
+
+            if (manager.isGameOver()) {
+                displayDialog();
+            } else {
+                changeText(2);
+            }
+
             manager.updateGlobalTimer(manager.totalOrbs());
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
             pBar.setProgress(0);
+
+
+
         }
         else if(timerEnded){
             if(action == DragEvent.ACTION_DRAG_ENDED)
@@ -265,17 +277,18 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     manager.setEndTimer(false);
                     manager.startTimer();
                     manager.resetScore();
+                    matcher.reset();
                     draggedOrb = (OrbView) v;
                     draggedOrb.setVisibility(View.INVISIBLE);
-                    Log.d(TAG, "Orb ID is " + draggedOrb.getID() + " and (Row,Col) is (" + draggedOrb.getRow() + ", " + draggedOrb.getCol() + ")");
+                    Log.d(TAG, /*"Orb ID is " + draggedOrb.getID() + */ "isMatched: " + draggedOrb.isMatched() + " and (Row,Col) is (" + draggedOrb.getRow() + ", " + draggedOrb.getCol() + ")");
                     return true; // if you want to handle the touch event
                 } else {
-                    finish();
+                    displayDialog();
                 }
             case MotionEvent.ACTION_UP:
                 if (manager.isGameOver())
                 {
-                    finish();
+                    displayDialog();
                 }
                 return true; // if you want to handle the touch event
         }
@@ -293,6 +306,47 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             view1.setID(view2.getID());
             view2.setID(swapID);
 
+            boolean swapMatched = view1.isMatched();
+            view1.setMatched(view2.isMatched());
+            view2.setMatched(swapMatched);
+        }
+    }
+
+    public OrbMatcher getMatcher() {
+        return matcher;
+    }
+
+    public GameManager getManager () {
+        return manager;
+    }
+
+
+    public void displayDialog () {
+
+        if (!dialogDisplayed) {
+
+            dialogDisplayed = true;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage("You scored " + lScore + "!")
+                    .setTitle("Finish!");
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+            new CountDownTimer(3000, 60) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    pBar.setProgress(pBar.getProgress() + 1);
+                }
+
+                @Override
+                public void onFinish() {
+                    finish();
+                }
+            }.start();
         }
     }
 }

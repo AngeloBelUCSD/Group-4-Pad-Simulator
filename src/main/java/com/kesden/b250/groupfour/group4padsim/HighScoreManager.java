@@ -18,7 +18,10 @@ public class HighScoreManager {
         this.context = context;
     }
 
-    public void updateHighScores(String newName, int newScore){
+    public int updateHighScores(String newName, int newScore){
+
+        // To return ranking information
+        int rank = -1;
 
         Log.d(this.getClass().toString(), "New high score: " + newName + " - " + newScore);
 
@@ -46,7 +49,7 @@ public class HighScoreManager {
 
         }
         //If the new score is lower than the very last one then high score table is not updated.
-        if(newScore < hs[totalHS-1]) return;
+        if(newScore < hs[totalHS-1]) return -1;
 
         //Declare an int and String to hold high score values as they are pushed down the table.
         int replaceValue = -1;
@@ -65,6 +68,7 @@ public class HighScoreManager {
                 if(replaceValue == -1){
 
                     Log.d(this.getClass().toString(), "New high score at pos " + i + ": " + newName + " - " + newScore);
+                    rank = i;
 
                     replaceValue = hs[i];
                     replaceName = hsn[i];
@@ -87,6 +91,7 @@ public class HighScoreManager {
 
             editHighScore(new_hsn[i], new_hs[i], hsn_keys[i], hs_keys[i]);
         }
+        return rank +1;
     }
 
     //Clear all high scores.

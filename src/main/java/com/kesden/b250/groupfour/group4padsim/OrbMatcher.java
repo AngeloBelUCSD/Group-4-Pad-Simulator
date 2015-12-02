@@ -30,6 +30,7 @@ public class OrbMatcher {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private boolean done;
+    private boolean noCascade;
 
     MainActivity activity;
 
@@ -77,22 +78,28 @@ public class OrbMatcher {
     public void sort() {
         threeSort();
         comboCheck(threeList);
-
-        int[] result = comboSize();
-        replaceOrbs();
-        //replaceFromIndex();
-        resetLists();
-
-        Log.d(TAG, "Red orb: " + result[0] + " Dark orb: " + result[1] + " Heal orb: "
-                + result[2] + " light orb: " + result[3] + " blue orb: " + result[4] + " green orb: "
-                + result[5]);
-        done = true;
+        pushOrbsToBottom();
 
     }
 
-    public boolean sortFinished()
-    {
-        return done;
+    public void continueSort() {
+        if (!done) {
+            done = true;
+            int[] result = comboSize();
+            replaceMatchedOrbs();
+            resetLists();
+
+            Log.d(TAG, "Red orb: " + result[0] + " Dark orb: " + result[1] + " Heal orb: "
+                    + result[2] + " light orb: " + result[3] + " blue orb: " + result[4] + " green orb: "
+                    + result[5]);
+
+            if (!noCascade) {
+                activity.changeText(2);
+                activity.getManager().updateGlobalTimer(activity.getManager().totalOrbs());
+            }
+
+            noCascade = true;
+        }
     }
 
 
@@ -163,6 +170,9 @@ public class OrbMatcher {
                     int curr = adj.get(0);
                     adj.remove(0);
                     comboList.get(type).add(curr);
+
+                    factory.orbList.get(curr).setMatched(true);
+
                     if (curr % 6 != 0 && curr<30 && threeList[curr - 1] == type) {
                         if(!adj.contains(curr-1)) {
                             adj.add(curr - 1);
@@ -188,6 +198,7 @@ public class OrbMatcher {
             }
         }
     }
+
     public int[] comboSize()
     {
         for(int i = 0; i<comboSize.length;i++){
@@ -196,8 +207,82 @@ public class OrbMatcher {
         return comboSize;
     }
 
-    public void replaceFromIndex()
+    public void pushOrbsToBottom()
     {
+
+        noCascade = true;
+
+        // Consider each column in the board
+        for (int i = 0; i < 6; i++) {
+            OrbView firstOrb = factory.orbList.get(i);
+            OrbView secondOrb = factory.orbList.get(i+6);
+            OrbView thirdOrb = factory.orbList.get(i+12);
+            OrbView fourthOrb = factory.orbList.get(i+18);
+            OrbView fifthOrb = factory.orbList.get(i+24);
+
+            ArrayList<OrbView> nonMatchedOrbs = new ArrayList<>(5);
+
+            // push orbs that art not matched into ArrayList
+            if (!fifthOrb.isMatched())
+                nonMatchedOrbs.add(fifthOrb);
+            else
+                fifthOrb.setAlpha(0.0f);
+            if (!fourthOrb.isMatched())
+                nonMatchedOrbs.add(fourthOrb);
+            else
+                fourthOrb.setAlpha(0.0f);
+            if (!thirdOrb.isMatched())
+                nonMatchedOrbs.add(thirdOrb);
+            else
+                thirdOrb.setAlpha(0.0f);
+            if (!secondOrb.isMatched())
+                nonMatchedOrbs.add(secondOrb);
+            else
+                secondOrb.setAlpha(0.0f);
+            if (!firstOrb.isMatched())
+                nonMatchedOrbs.add(firstOrb);
+            else
+                firstOrb.setAlpha(0.0f);
+
+            int numNonMatchedOrbs = nonMatchedOrbs.size();
+            int numMatchedOrbs = 5 - numNonMatchedOrbs;
+
+            if (numNonMatchedOrbs != 5) {
+                for (int j = 0; j < numNonMatchedOrbs; j++) {
+                    // Is not the same orb
+                    if (nonMatchedOrbs.get(j) != factory.orbList.get(i+(6*(4-j)))) {
+                        if (numMatchedOrbs > 0) {
+                            if (noCascade)
+                                noCascade = false;
+                            factory.cascadeExistingOrb(nonMatchedOrbs.get(j), factory.orbList.get(i + (6 * (4 - j))), BoardFactory.TARGET_BOTTOM_ORB);
+                            numMatchedOrbs--;
+                        } else if (factory.orbList.get(i+(6*(4-j))).isMatched()) {
+                            factory.cascadeExistingOrb(nonMatchedOrbs.get(j), factory.orbList.get(i + (6 * (4 - j))), BoardFactory.HIDE_TARGET_ORB);
+                        } else {
+                            factory.cascadeExistingOrb(nonMatchedOrbs.get(j), factory.orbList.get(i + (6 * (4 - j))), BoardFactory.EXISTING_ORB);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        if (noCascade)
+            continueSort();
+    }
+
+    /**
+     * cascades new orbs row by row
+     */
+    public void replaceMatchedOrbs() {
+        // Consider each row in the board
+        for (int i = 0; i < factory.orbList.size(); i++) {
+            OrbView orb = factory.orbList.get(i);
+            if (orb.isMatched()) {
+                factory.setRandomOrb(orb);
+                orb.setMatched(false);
+            }
+        }
 
     }
 
@@ -241,10 +326,10 @@ public class OrbMatcher {
                             top = top - 6;
                             OrbView newOrb = factory.orbList.get(curr);
                             OrbView topOrb = factory.orbList.get(top);
-                            factory.cascadeExistingOrb(topOrb, newOrb);
+                            factory.cascadeExistingOrb(topOrb, newOrb, BoardFactory.EXISTING_ORB);
                             curr = curr - 6;
                         }
-                        factory.cascadeNewOrb(top);
+                        factory.cascadeNewOrb(top, BoardFactory.NEW_ORB);
                     }
                 }
                 //vertical animation
@@ -273,16 +358,16 @@ public class OrbMatcher {
                             OrbView topOrb = factory.orbList.get(highest);
                             OrbView target = factory.orbList.get(lowest);
                             Log.d(TAG, "CascadeExisting call: top: " + highest + ", target: " + lowest);
-                            factory.cascadeExistingOrb(topOrb, target);
+                            factory.cascadeExistingOrb(topOrb, target, BoardFactory.EXISTING_ORB);
                             lowest = lowest - 6;
                         }
                         while (lowest - 6 >= 0) {
-                            factory.cascadeNewOrb(lowest);
+                            factory.cascadeNewOrb(lowest, BoardFactory.NEW_ORB);
                             Log.d(TAG, "CascadeNew call at orb: " + lowest);
                             lowest = lowest - 6;
                         }
                         Log.d(TAG, "Final cascadeNew call at:  " + lowest);
-                        factory.cascadeNewOrb(lowest);
+                        factory.cascadeNewOrb(lowest, BoardFactory.NEW_ORB);
                     }
                 }
             }
@@ -300,6 +385,11 @@ public class OrbMatcher {
         for(ArrayList<Integer> xV:comboListV){
             xV.clear();
         }
+    }
+
+    public void reset()
+    {
+        done = false;
     }
 
 

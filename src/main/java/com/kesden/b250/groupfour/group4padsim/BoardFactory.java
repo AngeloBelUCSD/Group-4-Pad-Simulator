@@ -22,6 +22,8 @@ public class BoardFactory {
 
     public static int NEW_ORB = 1;
     public static int EXISTING_ORB = 2;
+    public static int TARGET_BOTTOM_ORB = 3;
+    public static int HIDE_TARGET_ORB = 4;
 
     private Random rand;
     public ArrayList<Integer> colorList;
@@ -115,7 +117,18 @@ public class BoardFactory {
         return orb;
     }
 
-    public void cascadeNewOrb(int pos) {
+    public void setRandomOrb(OrbView orb) {
+        int orbID = rand.nextInt(6);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
+        orb.setOrb(newBitmap, orbID);
+
+        orb.setAlpha(1.0f);
+        orb.invalidate();
+    }
+
+    public void cascadeNewOrb(int pos, int flag) {
 
 
         /* targetOrb is invisible */
@@ -133,20 +146,20 @@ public class BoardFactory {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
         topOrb.setOrb(newBitmap, orbID);
-        topOrb.setAlpha(1.0f);
+        topOrb.setAlpha(0.7f);
 
         /* calls cascadeAnimation to animate from top row to target row */
-        cascadeAnimation(topOrb, targetOrb, BoardFactory.NEW_ORB);
+        cascadeAnimation(topOrb, targetOrb, flag);
 
     }
 
-    public void cascadeExistingOrb(OrbView topOrb, OrbView targetOrb) {
+    public void cascadeExistingOrb(OrbView topOrb, OrbView targetOrb, int flag) {
 
-        cascadeAnimation(topOrb, targetOrb, BoardFactory.EXISTING_ORB);
+        cascadeAnimation(topOrb, targetOrb, flag);
 
     }
 
-    private void cascadeAnimation(final OrbView topOrb, final OrbView targetOrb, int flag) {
+    private void cascadeAnimation(final OrbView topOrb, final OrbView targetOrb, final int flag) {
 
         /* Takes two orbViews. Animating Orb and its target orb (for the cell location) */
 
@@ -162,14 +175,16 @@ public class BoardFactory {
         final double targetY = (double)targetOrbCoord[1]  + targetOrb.getHeight()/2.0;
         final double travelDist = topY - targetY;
 
-        targetOrb.setAlpha(0.5f);
+        if (flag == TARGET_BOTTOM_ORB || flag == HIDE_TARGET_ORB)
+            targetOrb.setAlpha(0.0f);
+
         topOrb.setAlpha(0.7f);
 
 
         /* Start Animation */
         final ObjectAnimator topOrbAnimator = ObjectAnimator.ofFloat(topOrb,
-                OrbView.TRANSLATION_Y, (int)(-travelDist));
-        topOrbAnimator.setDuration(1500);
+                OrbView.TRANSLATION_Y, (int) (-travelDist));
+        topOrbAnimator.setDuration(300);
         topOrbAnimator.setRepeatCount(1);
         topOrbAnimator.setRepeatMode(ValueAnimator.REVERSE);
         topOrbAnimator.start();
@@ -182,10 +197,13 @@ public class BoardFactory {
                 topOrbAnimator.setDuration(1);
                 swapOrbImages(topOrb, targetOrb);
             }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 targetOrb.setAlpha(1.0f);
+                if (flag == TARGET_BOTTOM_ORB)
+                    activity.getMatcher().continueSort();
             }
         });
 
@@ -195,6 +213,9 @@ public class BoardFactory {
         *   If existing orb cascaded, then targetOrb will switch with existing Orb, then
         *   top row (invisible orbs) will replace the targetOrb at the call of cascadeNewOrb(). */
 
+        /**
+         * callback to OrbMatcher to continue cascading
+         */
     }
 
 
@@ -209,6 +230,10 @@ public class BoardFactory {
             int swapID = view1.getID();
             view1.setID(view2.getID());
             view2.setID(swapID);
+
+            boolean swapMatched = view1.isMatched();
+            view1.setMatched(view2.isMatched());
+            view2.setMatched(swapMatched);
 
         }
     }
@@ -363,6 +388,6 @@ public class BoardFactory {
         //targetOrb.setVisibility(View.INVISIBLE);
         topOrb.setAlpha(1.0f);
         //topOrb.setVisibility(View.INVISIBLE);
-        cascadeNewOrb(4);
+        cascadeNewOrb(4, BoardFactory.NEW_ORB);
     }
 }
