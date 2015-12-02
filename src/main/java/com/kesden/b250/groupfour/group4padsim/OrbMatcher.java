@@ -201,13 +201,7 @@ public class OrbMatcher {
                 {
                     int id = test;
                     int curr = location;
-                    int top = curr;/*
-                    int orbID = rand.nextInt(6);
-                    Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
-                    Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
-                    OrbView orb = factory.orbList.get(curr);
-                    orb.setOrb(newBitmap, orbID);
-                    orb.setVisibility(View.INVISIBLE);*/
+                    int top = curr;
                     while(top-6>=0)
                     {
                         top = top-6;
@@ -217,6 +211,7 @@ public class OrbMatcher {
                         factory.cascadeExistingOrb(topOrb, newOrb);
                         curr = curr-6;
                     }
+                    factory.cascadeNewOrb(0,top);
                 }
             }
             test++;

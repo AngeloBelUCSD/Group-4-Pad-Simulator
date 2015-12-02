@@ -108,7 +108,7 @@ public class BoardFactory {
         orb.setOrb(newBitmap, orbID);
 
         //set invisible here
-        orb.setVisibility(View.INVISIBLE);
+        orb.setAlpha(0.0f);
 
         return orb;
     }
@@ -129,7 +129,7 @@ public class BoardFactory {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
         topOrb.setOrb(newBitmap, orbID);
-        topOrb.setVisibility(View.VISIBLE);
+        topOrb.setAlpha(1.0f);
 
         /* calls cascadeAnimation to animate from top row to target row */
         cascadeAnimation(topOrb, targetOrb);
@@ -170,14 +170,14 @@ public class BoardFactory {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationRepeat(animation);
-                topOrb.setVisibility(View.INVISIBLE);
+                topOrb.setAlpha(0.0f);
                 topOrbAnimator.setDuration(1);
                 swapOrbImages(topOrb, targetOrb);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                targetOrb.setVisibility(View.VISIBLE);
+                targetOrb.setAlpha(1.0f);
             }
         });
 
@@ -240,7 +240,7 @@ public class BoardFactory {
             orb.setOnDragListener(activity);
         }
 
-        /* Making the top row. Invisible*/
+        /* Making the top row. Invisible */
         for(int i = orbList.size()-6; i<orbList.size(); i++) {
             OrbView orb = orbList.get(i);
             int orbID = rand.nextInt(6);
@@ -248,7 +248,7 @@ public class BoardFactory {
             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
 
             orb.setOrb(newBitmap, orbID);
-            orb.setVisibility(View.VISIBLE);
+            orb.setAlpha(0.0f);
 
         }
 
@@ -343,5 +343,17 @@ public class BoardFactory {
         objectAnimator2.setDuration(10);
         objectAnimator2.start();*/
 
+    }
+
+    public void testNewOrb() {
+        /* FOR TESTING PURPOSES */
+
+        final OrbView topOrb = orbList.get(34);
+        final OrbView targetOrb = orbList.get(4);
+
+        //targetOrb.setVisibility(View.INVISIBLE);
+        topOrb.setAlpha(1.0f);
+        //topOrb.setVisibility(View.INVISIBLE);
+        cascadeNewOrb(0, 4);
     }
 }
