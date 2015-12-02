@@ -9,14 +9,17 @@ import android.view.View;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Random;
 
 import static java.util.Arrays.*;
 
 
 public class OrbMatcher {
-    public int total;
+
     public int[] threeList;
+    public int[] comboSize;
+
     private BoardFactory factory;
     private Random rand;
     private ArrayList<ArrayList<Integer>> comboList;
@@ -49,6 +52,7 @@ public class OrbMatcher {
         comboList.add(4, blueCombo);
         comboList.add(5, greenCombo);
 
+        comboSize = new int[6];
     }
 
 
@@ -139,7 +143,6 @@ public class OrbMatcher {
 
     public void sort()
     {
-
         threeSort();
         comboCheck(threeList);
 
@@ -150,11 +153,11 @@ public class OrbMatcher {
               + result[2]+" light orb: "+result[3]+" blue orb: "+result[4]+" green orb: "
                 + result[5]);
     }
+
     public void comboCheck(int[] threeList)
     {
         for(int i = 0; i<threeList.length;i++)
-        {
-            if(threeList[i]>-1) {
+            if (threeList[i] > -1) {
                 ArrayList<Integer> adj = new ArrayList<Integer>();
                 adj.add(i);
                 int type = threeList[i];
@@ -162,30 +165,24 @@ public class OrbMatcher {
                     int curr = adj.get(0);
                     adj.remove(0);
                     comboList.get(type).add(curr);
-                    if(curr%6!=0 && threeList[curr-1]==type)
-                    {
-                        adj.add(curr-1);
+                    if (curr % 6 != 0 && threeList[curr - 1] == type) {
+                        adj.add(curr - 1);
                     }
-                    if(curr%6!=5 && threeList[curr+1]==type)
-                    {
-                        adj.add(curr+1);
+                    if (curr % 6 != 5 && threeList[curr + 1] == type) {
+                        adj.add(curr + 1);
                     }
-                    if(curr>=6 && threeList[curr-6]==type)
-                    {
-                        adj.add(curr-6);
+                    if (curr >= 6 && threeList[curr - 6] == type) {
+                        adj.add(curr - 6);
                     }
-                    if(curr<24 && threeList[curr+6]==type)
-                    {
-                        adj.add(curr+6);
+                    if (curr < 24 && threeList[curr + 6] == type) {
+                        adj.add(curr + 6);
                     }
-                    threeList[curr]=-1;
+                    threeList[curr] = -1;
                 }
             }
-        }
     }
     public int[] comboSize()
     {
-        int[] comboSize = new int[6];
         for(int i = 0; i<comboSize.length;i++){
             comboSize[i] = comboList.get(i).size();
             if(comboSize[i]==2) comboSize[i]=3;
@@ -204,15 +201,19 @@ public class OrbMatcher {
                 Log.d(TAG, "Combo for type " + test + " is size " + x.size());
                 for(int location:x)
                 {
-                    OrbView newOrb = factory.orbList.get(location);
-                    int currID = newOrb.getID();
-                    int orbID = rand.nextInt(6);
-                    while(currID==orbID) {
-                        orbID = rand.nextInt(6);
+                    int id = test;
+                    int curr = location;
+                    int top = curr;
+                    while(top-6>=0)
+                    {
+                        top = top-6;
+                        OrbView newOrb = factory.orbList.get(curr);
+                        OrbView topOrb = factory.orbList.get(top);
+                        newOrb.setVisibility(View.VISIBLE);
+                        factory.cascadeExistingOrb(topOrb, newOrb);
+                        curr = curr-6;
                     }
-                    Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
-                    Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, factory.point.y / 10, true);
-                    newOrb.setOrb(newBitmap, orbID);
+                    factory.cascadeNewOrb(0,top);
                 }
             }
             test++;

@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 scoreText.setText("Current Score: " + Integer.toString(lScore));
 
                 if (turnScore > 0)
-                    motiText.setText("Matched " + turnScore / 100 + " Orbs!");
+                    motiText.setText("Matched " + manager.totalOrbs() + " Orbs!");
                 break;
 
             default:
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
             draggedOrb = null;
             matcher.sort();
             changeText(2);
-            manager.startUpdateTimer(manager.getScore()/100, timeText);
+            manager.startUpdateTimer(1+manager.totalOrbs(), timeText);
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
@@ -224,8 +224,10 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
-                        manager.startUpdateTimer(1+manager.getScore()/100, timeText);
+                        manager.startUpdateTimer(1+manager.totalOrbs(), timeText);
                         dragStarted = false;
+                        manager.cancelTimer();
+                        dragText.setText("");
                     }
                     // Handle End
                 default:
@@ -255,9 +257,12 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     draggedOrb.setVisibility(View.INVISIBLE);
                     Log.d(TAG, "Orb ID is " + draggedOrb.getID());
                     return true; // if you want to handle the touch event
+                }else{
+                    finish();
                 }
             case MotionEvent.ACTION_UP:
-                dragText.setText("");
+                if(manager.isGameOver())
+                    finish();
                 return true; // if you want to handle the touch event
         }
         return false;
