@@ -16,8 +16,8 @@ public class GameManager {
     private boolean endTimer = false;
     private boolean gameOver;
     private int timeRemaining;
-    private int score;
     private int mode;
+    private int score;
     private int dragTimeRemaining;
 
     public GameManager(OrbMatcher inputMatcher, int inputMode){
