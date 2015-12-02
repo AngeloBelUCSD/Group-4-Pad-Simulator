@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         mode = new SettingsManager(this).getMode();
         manager = new GameManager(matcher, mode, pBar);
         timeText = (TextView) findViewById(R.id.textView3);
-        manager.startUpdateTimer(0,timeText);
+        manager.startGlobalTimer(10,timeText);
 
         /* Populate board and set listeners */
         bFactory.populateBoard();
@@ -179,9 +179,9 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 draggedOrb.setVisibility(View.VISIBLE);
             enteredOrb = null;
             draggedOrb = null;
-            matcher.threeSort();
+            matcher.sort();
             changeText(2);
-            manager.startUpdateTimer(manager.getScore()/100, timeText);
+            manager.updateGlobalTimer(manager.totalOrbs());
             dragStarted = false;
             manager.setEndTimer(false);
             timerEnded = true;
@@ -226,7 +226,8 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     if (dragStarted) {
                         matcher.sort();
                         changeText(2);
-                        manager.startUpdateTimer(manager.getScore()/100, timeText); // looks like the cause of tapping-to-remove-time bug
+
+                        manager.updateGlobalTimer(manager.totalOrbs());
 
                         // Reset progress bar on drag end
                         manager.stopDragTimer();
@@ -266,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     finish();
                 }
             case MotionEvent.ACTION_UP:
-                // RELEASED
                 if (manager.isGameOver())
                 {
                     finish();

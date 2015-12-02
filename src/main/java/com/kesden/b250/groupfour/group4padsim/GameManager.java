@@ -18,6 +18,7 @@ public class GameManager {
     private boolean endTimer = false;
     private boolean gameOver;
     private int timeRemaining;
+    private int timeAccumulated;
     private int mode;
     private int score;
 
@@ -25,8 +26,8 @@ public class GameManager {
         matcher = inputMatcher;
         mode = inputMode;
         gameOver = false;
-        timeRemaining = 60;
         pBar = progressBar;
+
     }
 
     public int getScore(){
@@ -75,9 +76,10 @@ public class GameManager {
 
     public void startTimer(){
         endTimer = false;
-        if(dragTimer != null) {
+
+        if(dragTimer != null)
             dragTimer.cancel();
-        }
+
         dragTimer = new CountDownTimer(5000, 50) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -99,29 +101,40 @@ public class GameManager {
         endTimer = setTimerTo;
     }
 
-    public void startUpdateTimer(int time, final TextView timeText){
-        if(finalTimer != null)
-            finalTimer.cancel();
+    public void startGlobalTimer(int time, final TextView timeText) {
+
+
         if(mode == 0){
             timeText.setText("Endless");
         }
         else{
+            timeAccumulated = 0;
+            timeText.setText("Time:" + time);
             timeRemaining += time;
-            timeText.setText("Time:" + timeRemaining);
-            finalTimer = new CountDownTimer((timeRemaining+1)*1000, 1000){
+
+            finalTimer = new CountDownTimer(timeRemaining*1000, 1000){
                 @Override
                 public void onTick(long millisUntilFinished) {
                     timeRemaining--;
-                    timeText.setText("Time:" + timeRemaining);
+                    timeText.setText("Time:" + (timeRemaining+timeAccumulated));
                 }
 
                 @Override
                 public void onFinish() {
-                    timeText.setText("Game Over!");
-                    gameOver = true;
+                    timeRemaining = 0;
+                    if (timeAccumulated > 0) {
+                        startGlobalTimer(timeAccumulated, timeText);
+                    } else {
+                        timeText.setText("Game Over!");
+                        gameOver = true;
+                    }
                 }
             }.start();
         }
+    }
+
+    public void updateGlobalTimer(int time){
+        timeAccumulated += time;
     }
 
     public void stopDragTimer() {
@@ -132,4 +145,5 @@ public class GameManager {
     public boolean isGameOver(){
         return gameOver;
     }
+
 }
