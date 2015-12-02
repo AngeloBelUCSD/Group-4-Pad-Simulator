@@ -240,15 +240,15 @@ public class BoardFactory {
             orb.setOnDragListener(activity);
         }
 
-        /* Making the top row. Invisible */
+        /* Making the top row. Invisible*/
         for(int i = orbList.size()-6; i<orbList.size(); i++) {
             OrbView orb = orbList.get(i);
-            int orbID = rand.nextInt(1);
+            int orbID = rand.nextInt(6);
             Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
 
             orb.setOrb(newBitmap, orbID);
-            orb.setVisibility(View.INVISIBLE);
+            orb.setVisibility(View.VISIBLE);
 
         }
 
