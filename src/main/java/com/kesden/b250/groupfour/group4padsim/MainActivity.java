@@ -220,10 +220,14 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                         if (enteredOrb != null) {
                             draggedOrb = enteredOrb;
                         }
+                        
+                        if (draggedOrb != null){
+                            
+                           draggedOrb.swapImages(enteredOrb);
+                           draggedOrb.setVisibility(View.VISIBLE);
+                        }
 
                         enteredOrb = (OrbView) v;
-                        swapOrbImages(draggedOrb, enteredOrb);
-                        draggedOrb.setVisibility(View.VISIBLE);
                         enteredOrb.setVisibility(View.INVISIBLE);
                     }
                     break;
@@ -261,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
         return true;
     }
 
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch(event.getAction()) {
@@ -293,23 +296,6 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 return true; // if you want to handle the touch event
         }
         return false;
-    }
-
-    public void swapOrbImages(OrbView view1, OrbView view2) {
-        if (view1 != null && view2 != null) {
-            Bitmap swap;
-            swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
-            view1.setImageBitmap(((BitmapDrawable) view2.getDrawable()).getBitmap());
-            view2.setImageBitmap(swap);
-
-            int swapID = view1.getID();
-            view1.setID(view2.getID());
-            view2.setID(swapID);
-
-            boolean swapMatched = view1.isMatched();
-            view1.setMatched(view2.isMatched());
-            view2.setMatched(swapMatched);
-        }
     }
 
     public OrbMatcher getMatcher() {
