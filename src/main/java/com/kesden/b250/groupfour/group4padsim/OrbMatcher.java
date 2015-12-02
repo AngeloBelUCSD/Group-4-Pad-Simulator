@@ -15,6 +15,7 @@ import static java.util.Arrays.*;
 
 
 public class OrbMatcher {
+
     public int[] threeList;
     public int[] comboSize;
 

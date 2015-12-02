@@ -61,15 +61,11 @@ public class GameManager {
             totalSize += size;
         }
 
-        Log.d("GameManager", "Red orb: "+comboList[0]+" Dark orb: "+comboList[1]+" Heal orb: "
-                + comboList[2]+" light orb: "+comboList[3]+" blue orb: "+comboList[4]+" green orb: "
-                + comboList[5]);
-
         return totalSize;
     }
 
     public void resetScore(){
-        for(int i:matcher.comboSize){
+        for(int i:matcher.comboSize) {
             i = 0;
         }
     }
