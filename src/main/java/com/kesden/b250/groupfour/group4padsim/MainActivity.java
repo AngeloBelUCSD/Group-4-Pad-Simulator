@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     finish();
                 }
             case MotionEvent.ACTION_UP:
-                // RELEASED
+                dragText.setText("");
                 if (manager.isGameOver())
                 {
                     finish();
