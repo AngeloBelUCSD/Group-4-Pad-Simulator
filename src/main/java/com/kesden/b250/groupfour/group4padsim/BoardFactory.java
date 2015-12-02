@@ -180,7 +180,7 @@ public class BoardFactory {
                 super.onAnimationRepeat(animation);
                 topOrb.setAlpha(0.0f);
                 topOrbAnimator.setDuration(1);
-                swapOrbImages(topOrb, targetOrb);
+                topOrb.swapImages(targetOrb);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -196,23 +196,6 @@ public class BoardFactory {
         *   top row (invisible orbs) will replace the targetOrb at the call of cascadeNewOrb(). */
 
     }
-
-
-
-    public void swapOrbImages(OrbView view1, OrbView view2) {
-        if (view1 != null && view2 != null) {
-            Bitmap swap;
-            swap = ((BitmapDrawable) view1.getDrawable()).getBitmap();
-            view1.setImageBitmap(((BitmapDrawable) view2.getDrawable()).getBitmap());
-            view2.setImageBitmap(swap);
-
-            int swapID = view1.getID();
-            view1.setID(view2.getID());
-            view2.setID(swapID);
-
-        }
-    }
-
 
     public void populateBoard() {
         createOrbs(orbList);
@@ -321,7 +304,7 @@ public class BoardFactory {
                 topOrb.setVisibility(View.INVISIBLE);
                 objectAnimator.setDuration(10);
 
-                swapOrbImages(topOrb, targetOrb);
+                topOrb.swapImages(targetOrb);
             }
             @Override
             public void onAnimationEnd(Animator animator) {
