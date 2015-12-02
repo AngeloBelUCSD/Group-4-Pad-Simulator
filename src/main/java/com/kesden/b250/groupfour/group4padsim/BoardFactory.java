@@ -98,11 +98,10 @@ public class BoardFactory {
     }
 
 
-    private OrbView createOrb(int row, int col) {
+    private OrbView createOrb(int pos) {
 
 
-        int calcI = (row * 6) + col;
-        OrbView orb = orbList.get(calcI);
+        OrbView orb = orbList.get(pos);
         int orbID = rand.nextInt(6);
 
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
@@ -116,19 +115,21 @@ public class BoardFactory {
         return orb;
     }
 
-    public void cascadeNewOrb(int row, int col) {
+    public void cascadeNewOrb(int pos) {
 
 
         /* targetOrb is invisible */
         /* I do not think we need to create a new orb. */
-        OrbView targetOrb = createOrb(row, col);
+        //OrbView targetOrb = createOrb(row, col);
+        OrbView targetOrb = createOrb(pos);
 
         /* There is a row of invisible orbs at the top of the screen.
         *  The invisible orbs will randomly get a color and turn itself visible.
         *  Then it switches with the target orb (which is invisible). */
         /* topOrb is initially invisible */
         int orbID = rand.nextInt(6);
-        OrbView topOrb = orbList.get(30 + col);
+        int rem = pos%6;
+        OrbView topOrb = orbList.get(30 + rem);
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), colorList.get(orbID));
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int) (point.y / 10.5), true);
         topOrb.setOrb(newBitmap, orbID);
@@ -361,6 +362,6 @@ public class BoardFactory {
         //targetOrb.setVisibility(View.INVISIBLE);
         topOrb.setAlpha(1.0f);
         //topOrb.setVisibility(View.INVISIBLE);
-        cascadeNewOrb(0, 4);
+        cascadeNewOrb(4);
     }
 }

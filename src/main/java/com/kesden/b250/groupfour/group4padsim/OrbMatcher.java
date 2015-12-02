@@ -81,34 +81,23 @@ public class OrbMatcher {
         replaceOrbs();
         resetLists();
 
-        /*threeSort();
-        comboCheck(threeList);
-        int[] check2 = comboSize();
-        Log.d(TAG,"Combo 1 size is: " + (result[0]+result[1]+result[2]+result[3]+result[4]+result[5])
-        + "\n" + "Combo 2 size is: " + (check2[0]+check2[1]+check2[2]+check2[3]+check2[4]+check2[5]));
-        while(!check2.equals(result))
-        {
-            result = check2;
-            resetLists();
-            threeSort();
-            comboCheck(threeList);
-            replaceOrbs();
-            check2 = comboSize();
-        }*/
+        Log.d(TAG, "Red orb: " + result[0] + " Dark orb: " + result[1] + " Heal orb: "
+                + result[2] + " light orb: " + result[3] + " blue orb: " + result[4] + " green orb: "
+                + result[5]);
 
     }
 
     //function to sort out combos
     public void threeSort(){
         ArrayList<OrbView> orbs = factory.orbList;
-        for(int i = 2; i<30;i++) {
+        for(int i = 0; i<30;i++) {
             OrbView orb = orbs.get(i);
             /*The algorithm uses these if-statements due to the constraint of a one-dimensional array of orbs.
             The first condition of i>=2, along with the subsequent % conditions are to take orbs from the 3rd
             column onward. The second set of conditions are to take orbs from the 3rd row onward.
              */
             if (i >= 2) {
-                if (!(i % 6 == 0) || !(i % 6 == 1)) {
+                if (!(i % 6 == 0) && !(i % 6 == 1)) {
                     //here we go horizontal checks for combos
                     if (orbs.get(i - 2).getID() == (orbs.get(i - 1).getID())
                             && orbs.get(i - 1).getID() == orb.getID()) {
@@ -124,20 +113,7 @@ public class OrbMatcher {
                         //will be handled by orb factory cascade, in the meantime will comment out
 
                         for (int x = i - 2; x < i + add +1; x++) {
-                            threeList[x] = type;/*
-                            int curr = x;
-                            while (curr - 6 >= 0) {
-                                OrbView topOrb = orbs.get(curr - 6);
-                                OrbView currOrb = orbs.get(curr);
-                                Bitmap swap = ((BitmapDrawable) topOrb.getDrawable()).getBitmap();
-                                currOrb.setOrb(swap, topOrb.getID());
-                                curr = curr - 6;
-                            }
-                            int orbID = rand.nextInt(6);
-                            Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
-                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
-                            orbs.get(curr).setOrb(newBitmap, orbID);
-                        }*/
+                            threeList[x] = type;
                         }
                     }
                 }
@@ -148,32 +124,18 @@ public class OrbMatcher {
                             && orbs.get(i - 6).getID() == orb.getID()) {
                         //tag vertical 3s
                         int curr = i;
-                        int add = 0;
                         int type = orb.getID();
                         //obtain length of combo
                         while (curr + 6 < 30 && orbs.get(curr).getID() == orbs.get(curr + 6).getID()) {
                             curr += 6;
-                            add += 6;
                         }
                         for (int x = i - 12; x < curr + 1; x += 6) {
                             threeList[x] = type;
-                            comboListV.get(type).add(x);
+                            if(!comboListV.get(type).contains(x))
+                            {
+                                comboListV.get(type).add(x);
+                            }
                         }
-                        /* same reason as above
-                        while (curr - 18 - add >= 0) {
-                            OrbView topOrb = orbs.get(curr - 18 - add);
-                            OrbView currOrb = orbs.get(curr);
-                            Bitmap swap = ((BitmapDrawable) topOrb.getDrawable()).getBitmap();
-                            currOrb.setOrb(swap, topOrb.getID());
-                            curr = curr - 6;
-                        }
-                        while (curr >= 0) {
-                            int orbID = rand.nextInt(6);
-                            Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), factory.colorList.get(orbID));
-                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, factory.point.x / 6, (int)(factory.point.y / 10.5), true);
-                            orbs.get(curr).setOrb(newBitmap, orbID);
-                            curr = curr - 6;
-                        }*/
                     }
                 }
             }
@@ -183,8 +145,8 @@ public class OrbMatcher {
 
     public void comboCheck(int[] threeList)
     {
-        for(int i = 0; i<threeList.length;i++)
-            if (threeList[i] > -1) {
+        for(int i = 0; i<threeList.length;i++) {
+            if (threeList[i] != -1) {
                 ArrayList<Integer> adj = new ArrayList<Integer>();
                 adj.add(i);
                 int type = threeList[i];
@@ -192,27 +154,35 @@ public class OrbMatcher {
                     int curr = adj.get(0);
                     adj.remove(0);
                     comboList.get(type).add(curr);
-                    if (curr % 6 != 0 && threeList[curr - 1] == type) {
-                        adj.add(curr - 1);
+                    if (curr % 6 != 0 && curr<30 && threeList[curr - 1] == type) {
+                        if(!adj.contains(curr-1)) {
+                            adj.add(curr - 1);
+                        }
                     }
-                    if (curr % 6 != 5 && threeList[curr + 1] == type) {
-                        adj.add(curr + 1);
+                    if (curr % 6 != 5 && curr<30 && threeList[curr + 1] == type) {
+                        if(!adj.contains(curr+1)) {
+                            adj.add(curr + 1);
+                        }
                     }
-                    if (curr >= 6 && threeList[curr - 6] == type) {
-                        adj.add(curr - 6);
+                    if (curr >= 6 && curr <30 && threeList[curr - 6] == type) {
+                        if(!adj.contains(curr-6)) {
+                            adj.add(curr - 6);
+                        }
                     }
                     if (curr < 24 && threeList[curr + 6] == type) {
-                        adj.add(curr + 6);
+                        if(!adj.contains(curr+6)) {
+                            adj.add(curr + 6);
+                        }
                     }
                     threeList[curr] = -1;
                 }
             }
+        }
     }
     public int[] comboSize()
     {
         for(int i = 0; i<comboSize.length;i++){
             comboSize[i] = comboList.get(i).size();
-            if(comboSize[i]==2) comboSize[i]=3;
         }
         return comboSize;
     }
@@ -246,25 +216,26 @@ public class OrbMatcher {
                 //horizontal animation
                 for(int location:x)
                 {
-                    int id = test;
-                    int curr = location;
-                    int top = curr;
-                    OrbView matchedOrb = factory.orbList.get(curr);
-                    matchedOrb.setAlpha(0.0f);
-                    while(top-6>=0)
-                    {
-                        top = top-6;
-                        OrbView newOrb = factory.orbList.get(curr);
-                        OrbView topOrb = factory.orbList.get(top);
-                        factory.cascadeExistingOrb(topOrb, newOrb);
-                        curr = curr-6;
+                    if(x.size()>=2) {
+                        Log.d(TAG, "horizontal combo size: " + x.size());
+                        int id = test;
+                        int curr = location;
+                        int top = curr;
+                        OrbView matchedOrb = factory.orbList.get(curr);
+                        matchedOrb.setAlpha(0.0f);
+                        while (top - 6 >= 0) {
+                            top = top - 6;
+                            OrbView newOrb = factory.orbList.get(curr);
+                            OrbView topOrb = factory.orbList.get(top);
+                            factory.cascadeExistingOrb(topOrb, newOrb);
+                            curr = curr - 6;
+                        }
+                        factory.cascadeNewOrb(top);
                     }
-                    factory.cascadeNewOrb(0,top);
                 }
                 //vertical animation
                 if(!xV.isEmpty()) {
                     Collections.sort(xV);
-                    Log.d(TAG, "vertical combo start at "+xV.get(0));
                     for(int i:xV)
                     {
                         OrbView tmp = factory.orbList.get(i);
@@ -272,18 +243,22 @@ public class OrbMatcher {
                     }
                     int highest = xV.get(0);
                     int lowest = xV.get(xV.size() - 1);
-                    while (highest - 6 >= 0) {
+                    Log.d(TAG, "Lowest orb at: "+lowest+", highest orb at: " +highest);
+                    while(highest - 6 >= 0) {
                         highest = highest - 6;
                         OrbView topOrb = factory.orbList.get(highest);
                         OrbView target = factory.orbList.get(lowest);
+                        Log.d(TAG, "CascadeExisting call: top: "+highest + ", target: "+ lowest);
                         factory.cascadeExistingOrb(topOrb, target);
                         lowest = lowest - 6;
                     }
-                    while (lowest-6 >= 0) {
-                        factory.cascadeNewOrb((int) lowest / 6, lowest % 6);
+                    while(lowest-6 >= 0) {
+                        factory.cascadeNewOrb(lowest);
+                        Log.d(TAG, "CascadeNew call at orb: " + lowest);
                         lowest = lowest-6;
                     }
-                    factory.cascadeNewOrb(0,lowest);
+                    Log.d(TAG, "Final cascadeNew call at:  "+lowest);
+                    factory.cascadeNewOrb(lowest);
                 }
             }
             test++;
@@ -293,9 +268,13 @@ public class OrbMatcher {
     public void resetLists()
     {
         threeList = new int[30];
+        comboSize = new int[6];
         fill(threeList, -1);
         for(ArrayList<Integer> x:comboList) {
             x.clear();
+        }
+        for(ArrayList<Integer> xV:comboListV){
+            xV.clear();
         }
     }
 
