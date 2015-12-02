@@ -38,10 +38,4 @@ public class HighScoreActivity extends AppCompatActivity {
             tv.setText((i+1) + ". " + hsn[i] + " - " + hs[i]);
         }
     }
-
-    public void newHighScore(int newHS){
-
-
-    }
-
 }

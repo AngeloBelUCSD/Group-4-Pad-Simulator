@@ -49,21 +49,25 @@ public class OrbView extends ImageView{
 
     public void setID(int id)
     {
+
         this.id = id;
     }
 
     public int getID()
     {
+
         return id;
     }
 
     public void setImage(Bitmap bitmap)
     {
+
         setImageBitmap(bitmap);
     }
 
     public void setOrb(Bitmap bitmap, int id)
     {
+
         setID(id);
         setImage(bitmap);
     }

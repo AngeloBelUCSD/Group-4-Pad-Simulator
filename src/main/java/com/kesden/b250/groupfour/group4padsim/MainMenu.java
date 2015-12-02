@@ -33,11 +33,4 @@ public class MainMenu extends AppCompatActivity {
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == gameResult) {
-            // Update high scores here
-        }
-    }
 }
