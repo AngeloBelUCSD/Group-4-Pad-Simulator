@@ -25,15 +25,16 @@ public class OrbMatcher {
     private Random rand;
     private ArrayList<ArrayList<Integer>> comboList;
     private ArrayList<ArrayList<Integer>> comboListV;
-    private ArrayList<Integer> redCombo, darkCombo, healCombo,lightCombo, blueCombo, greenCombo;
-    private ArrayList<Integer> redComboV, darkComboV, healComboV,lightComboV, blueComboV, greenComboV;
+    private ArrayList<Integer> redCombo, darkCombo, healCombo, lightCombo, blueCombo, greenCombo;
+    private ArrayList<Integer> redComboV, darkComboV, healComboV, lightComboV, blueComboV, greenComboV;
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private boolean done;
 
     MainActivity activity;
 
     //Constructor takes in a BoardFactory object
-    public OrbMatcher(BoardFactory bFactory){
+    public OrbMatcher(BoardFactory bFactory) {
         rand = new Random();
         this.factory = bFactory;
         threeList = new int[30];
@@ -70,10 +71,10 @@ public class OrbMatcher {
         comboListV.add(5, greenComboV);
 
         comboSize = new int[6];
+        done = false;
     }
 
-    public void sort()
-    {
+    public void sort() {
         threeSort();
         comboCheck(threeList);
 
@@ -85,8 +86,15 @@ public class OrbMatcher {
         Log.d(TAG, "Red orb: " + result[0] + " Dark orb: " + result[1] + " Heal orb: "
                 + result[2] + " light orb: " + result[3] + " blue orb: " + result[4] + " green orb: "
                 + result[5]);
+        done = true;
 
     }
+
+    public boolean sortFinished()
+    {
+        return done;
+    }
+
 
     //function to sort out combos
     public void threeSort(){
@@ -223,7 +231,7 @@ public class OrbMatcher {
                 Log.d(TAG, "horizontal combo size: " + x.size());
                 for(int location:x)
                 {
-                    if(x.size()>=2) {
+                    if(x.size()>=1) {
                         int id = test;
                         int curr = location;
                         int top = curr;
@@ -242,29 +250,40 @@ public class OrbMatcher {
                 //vertical animation
                 if(!xV.isEmpty()) {
                     Collections.sort(xV);
+                    ArrayList<Integer> horizontal = new ArrayList<Integer>();
                     for(int i:xV)
                     {
                         OrbView tmp = factory.orbList.get(i);
                         //tmp.setAlpha(0.0f);
                     }
+
                     int highest = xV.get(0);
                     int lowest = xV.get(xV.size() - 1);
-                    Log.d(TAG, "Lowest orb at: "+lowest+", highest orb at: " +highest);
-                    while(highest - 6 >= 0) {
-                        highest = highest - 6;
-                        OrbView topOrb = factory.orbList.get(highest);
-                        OrbView target = factory.orbList.get(lowest);
-                        Log.d(TAG, "CascadeExisting call: top: "+highest + ", target: "+ lowest);
-                        factory.cascadeExistingOrb(topOrb, target);
-                        lowest = lowest - 6;
+                    horizontal.add(lowest);
+                    if(xV.get(xV.size() - 2) != lowest - 6) {
+                        horizontal.add(xV.get(xV.size() - 2));
                     }
-                    while(lowest-6 >= 0) {
+                    while(!horizontal.isEmpty()) {
+                        Log.d(TAG, "Lowest orb at: " + lowest + ", highest orb at: " + highest);
+                        lowest = horizontal.get(0);
+                        int check = lowest;
+                        horizontal.remove(0);
+                        while (highest - 6 >= 0) {
+                            highest = highest - 6;
+                            OrbView topOrb = factory.orbList.get(highest);
+                            OrbView target = factory.orbList.get(lowest);
+                            Log.d(TAG, "CascadeExisting call: top: " + highest + ", target: " + lowest);
+                            factory.cascadeExistingOrb(topOrb, target);
+                            lowest = lowest - 6;
+                        }
+                        while (lowest - 6 >= 0) {
+                            factory.cascadeNewOrb(lowest);
+                            Log.d(TAG, "CascadeNew call at orb: " + lowest);
+                            lowest = lowest - 6;
+                        }
+                        Log.d(TAG, "Final cascadeNew call at:  " + lowest);
                         factory.cascadeNewOrb(lowest);
-                        Log.d(TAG, "CascadeNew call at orb: " + lowest);
-                        lowest = lowest-6;
                     }
-                    Log.d(TAG, "Final cascadeNew call at:  "+lowest);
-                    factory.cascadeNewOrb(lowest);
                 }
             }
             test++;
