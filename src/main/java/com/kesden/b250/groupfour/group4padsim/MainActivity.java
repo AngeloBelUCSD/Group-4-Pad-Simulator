@@ -33,6 +33,9 @@ import org.w3c.dom.Text;
 
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity implements OnDragListener, OnTouchListener {
 
