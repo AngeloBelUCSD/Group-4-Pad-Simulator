@@ -16,6 +16,9 @@ public class OrbView extends ImageView{
     public static int GREEN_ORB = 5;
 
     private int id;
+    private int rowPos = -1;
+    private int colPos = -1;
+    private boolean isMatched = false;
 
     /**
      * @param context
@@ -66,5 +69,26 @@ public class OrbView extends ImageView{
     {
         setID(id);
         setImage(bitmap);
+    }
+
+    public void setRowCol(int r, int c) {
+        rowPos = r;
+        colPos = c;
+    }
+
+    public int getRow(){
+        return rowPos;
+    }
+
+    public int getCol(){
+        return colPos;
+    }
+
+    public boolean isMatched(){
+        return isMatched;
+    }
+
+    public void setMatched(boolean b) {
+        isMatched = b;
     }
 }

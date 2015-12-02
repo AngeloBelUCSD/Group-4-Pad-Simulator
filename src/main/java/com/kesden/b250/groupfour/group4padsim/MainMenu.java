@@ -12,6 +12,7 @@ public class MainMenu extends AppCompatActivity {
 
     private final int gameResult = 100;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

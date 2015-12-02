@@ -79,6 +79,7 @@ public class OrbMatcher {
 
         int[] result = comboSize();
         replaceOrbs();
+        //replaceFromIndex();
         resetLists();
 
         Log.d(TAG, "Red orb: " + result[0] + " Dark orb: " + result[1] + " Heal orb: "
@@ -187,6 +188,11 @@ public class OrbMatcher {
         return comboSize;
     }
 
+    public void replaceFromIndex()
+    {
+
+    }
+
     public void replaceOrbs()
     {
         int test = 0;
@@ -239,7 +245,7 @@ public class OrbMatcher {
                     for(int i:xV)
                     {
                         OrbView tmp = factory.orbList.get(i);
-                        tmp.setAlpha(0.0f);
+                        //tmp.setAlpha(0.0f);
                     }
                     int highest = xV.get(0);
                     int lowest = xV.get(xV.size() - 1);

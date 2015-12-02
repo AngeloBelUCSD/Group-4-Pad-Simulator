@@ -169,7 +169,7 @@ public class BoardFactory {
         /* Start Animation */
         final ObjectAnimator topOrbAnimator = ObjectAnimator.ofFloat(topOrb,
                 OrbView.TRANSLATION_Y, (int)(-travelDist));
-        topOrbAnimator.setDuration(300);
+        topOrbAnimator.setDuration(1500);
         topOrbAnimator.setRepeatCount(1);
         topOrbAnimator.setRepeatMode(ValueAnimator.REVERSE);
         topOrbAnimator.start();
@@ -243,6 +243,7 @@ public class BoardFactory {
             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, point.x / 6, (int)(point.y / 10.5), true);
 
             orb.setOrb(newBitmap, orbID);
+            orb.setRowCol(i/6+1, i%6+1);
 
             orb.setOnTouchListener(activity);
             orb.setOnDragListener(activity);

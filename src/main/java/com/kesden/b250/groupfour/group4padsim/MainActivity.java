@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                     manager.resetScore();
                     draggedOrb = (OrbView) v;
                     draggedOrb.setVisibility(View.INVISIBLE);
-                    Log.d(TAG, "Orb ID is " + draggedOrb.getID());
+                    Log.d(TAG, "Orb ID is " + draggedOrb.getID() + " and (Row,Col) is (" + draggedOrb.getRow() + ", " + draggedOrb.getCol() + ")");
                     return true; // if you want to handle the touch event
                 } else {
                     finish();
