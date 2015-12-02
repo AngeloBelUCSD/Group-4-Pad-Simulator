@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnDragListener, O
                 scoreText.setText("Current Score: " + Integer.toString(lScore));
 
                 if (turnScore > 0)
-                    motiText.setText("Matched " + turnScore / 100 + " Orbs!");
+                    motiText.setText("Matched " + manager.totalOrbs() + " Orbs!");
                 break;
 
             default:
