@@ -35,5 +35,57 @@
     <string name="reset_hs_button">Reset High Scores</string>
     <string name="reset_hs_summ">Reset all high scores to zero.</string>
 
+    <!-- High score strings go here. -->
+
+    <string name="hsn_default">None</string>
+
+    <string name="hs01">hs01</string>
+    <string name="hs02">hs02</string>
+    <string name="hs03">hs03</string>
+    <string name="hs04">hs04</string>
+    <string name="hs05">hs05</string>
+    <string name="hs06">hs06</string>
+    <string name="hs07">hs07</string>
+    <string name="hs08">hs08</string>
+    <string name="hs09">hs09</string>
+    <string name="hs10">hs10</string>
+
+    <string-array name="hs_keys">
+        <item>@string/hs01</item>
+        <item>@string/hs02</item>
+        <item>@string/hs03</item>
+        <item>@string/hs04</item>
+        <item>@string/hs05</item>
+        <item>@string/hs06</item>
+        <item>@string/hs07</item>
+        <item>@string/hs08</item>
+        <item>@string/hs09</item>
+        <item>@string/hs10</item>
+    </string-array>
+
+    <string name="hsn01">hsn01</string>
+    <string name="hsn02">hsn02</string>
+    <string name="hsn03">hsn03</string>
+    <string name="hsn04">hsn04</string>
+    <string name="hsn05">hsn05</string>
+    <string name="hsn06">hsn06</string>
+    <string name="hsn07">hsn07</string>
+    <string name="hsn08">hsn08</string>
+    <string name="hsn09">hsn09</string>
+    <string name="hsn10">hsn10</string>
+
+    <string-array name="hsn_keys">
+        <item>@string/hsn01</item>
+        <item>@string/hsn02</item>
+        <item>@string/hsn03</item>
+        <item>@string/hsn04</item>
+        <item>@string/hsn05</item>
+        <item>@string/hsn06</item>
+        <item>@string/hsn07</item>
+        <item>@string/hsn08</item>
+        <item>@string/hsn09</item>
+        <item>@string/hsn10</item>
+    </string-array>
+
 
 </resources>

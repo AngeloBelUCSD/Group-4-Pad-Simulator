@@ -16,12 +16,14 @@ public class GameManager {
     private boolean gameOver;
     private int timeRemaining;
     private int mode;
+    private int dragTimeRemaining;
 
     public GameManager(OrbMatcher inputMatcher, int inputMode){
         matcher = inputMatcher;
         mode = inputMode;
         gameOver = false;
         timeRemaining = 60;
+        dragTimeRemaining = 5;
     }
 
     public int getScore(){
@@ -32,19 +34,21 @@ public class GameManager {
         matcher.total = 0;
     }
 
-    public void startTimer(){
+    public void startTimer(final TextView dragTime){
         endTimer = false;
         if(dragTimer != null)
             dragTimer.cancel();
         dragTimer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-
+                dragTime.setText("drag: " + dragTimeRemaining);
+                dragTimeRemaining--;
             }
 
             @Override
             public void onFinish() {
                 endTimer = true;
+                dragTime.setText("");
             }
         }.start();
     }
