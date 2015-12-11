@@ -1,10 +1,8 @@
 package com.kesden.b250.groupfour.group4padsim;
 
-import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
 
 import java.lang.reflect.Field;
 

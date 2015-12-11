@@ -1,11 +1,8 @@
 package com.kesden.b250.groupfour.group4padsim;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.ApplicationTestCase;
 
 /**
  * Created by Siotle on 12/2/2015.
