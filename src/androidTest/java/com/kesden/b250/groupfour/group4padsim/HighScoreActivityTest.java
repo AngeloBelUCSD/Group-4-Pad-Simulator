@@ -17,12 +17,23 @@ public class HighScoreActivityTest extends ActivityInstrumentationTestCase2<High
     public HighScoreActivityTest() {
         super(HighScoreActivity.class);
 
-        hiAct = getActivity();
+
     }
 
     @Override
     protected void setUp() throws Exception{
         super.setUp();
+
+        hiAct = getActivity();
+    }
+
+    /*
+    Given that the user chooses to clear all high scores
+    When the user opens up HighScoreActivity
+    All high scores should show up as cleared.
+     */
+
+    public void testClearedHighScore() throws Exception{
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(hiAct);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -34,15 +45,6 @@ public class HighScoreActivityTest extends ActivityInstrumentationTestCase2<High
         }
 
         editor.commit();
-    }
-
-    /*
-    Given that the user chooses to clear all high scores
-    When the user opens up HighScoreActivity
-    All high scores should show up as cleared.
-     */
-
-    public void testClearedHighScore() throws Exception{
 
         HighScoreManager hsManager = new HighScoreManager(hiAct);
         hsManager.clearHighScores();
@@ -52,8 +54,8 @@ public class HighScoreActivityTest extends ActivityInstrumentationTestCase2<High
 
         for(int i = 0; i < 9; i++){
 
-            String actual_name = hsManager.getHighScoreName("hsn0" + i);
-            int actual_value = hsManager.getHighScoreValue("hs0" + i);
+            String actual_name = hsManager.getHighScoreName("hsn0" + (i+1));
+            int actual_value = hsManager.getHighScoreValue("hs0" + (i+1));
 
             assertEquals(expected_name, actual_name);
             assertEquals(expected_value, actual_value);

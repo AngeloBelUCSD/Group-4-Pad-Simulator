@@ -23,14 +23,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     protected void setUp() throws Exception{
         super.setUp();
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mAct);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString("game_mode", "1");
-        editor.putString("difficulty", "0");
-
-        editor.commit();
-
         mAct = getActivity();
     }
 
@@ -40,6 +32,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     Then the game should start a Time Attack game on Easy difficulty.
      */
     public void testGameDifficulty() throws Exception{
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mAct);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("game_mode", "1");
+        editor.putString("difficulty", "0");
+
+        editor.commit();
 
         final int expectedMode = 1;
         final int expectedDifficulty = 0;
